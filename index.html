@@ -282,3 +282,126 @@ lockOverlay.addEventListener('click', () => {
     }, 600);
 });
 }
+
+const secretWord = "love"; // <-- CHANGE THIS to any word you want
+let typedWord = "";
+const inputField = document.getElementById('secretInput');
+const typedDisplay = document.getElementById('typedDisplay');
+const lockOverlayEl = document.getElementById('lockOverlay');
+const photoFrameEl = document.getElementById('photoFrame');
+const lockIcon = document.getElementById('lockIcon');
+
+// Auto-focus the input when page loads
+window.addEventListener('load', () => {
+    inputField.focus();
+});
+
+inputField.addEventListener('input', (e) => {
+    const currentInput = e.target.value.toLowerCase();
+    typedWord = currentInput;
+    typedDisplay.textContent = typedWord; // show letters above the input
+
+    // Check if the word matches
+    if (typedWord === secretWord) {
+        // Unlock!
+        photoFrameEl.classList.remove('locked');
+        lockIcon.textContent = '❤️';
+        typedDisplay.textContent = '❤️❤️❤️';
+        // Optional confetti & typewriter already present
+        setTimeout(() => {
+            lockOverlayEl.style.display = 'none';
+        }, 600);
+    }
+});
+
+// Also allow pressing Enter to check (but input triggers on typing, so Enter just for feeling)
+inputField.addEventListener('keypress', (e) => {
+    if (e.key === 'Enter') {
+        e.preventDefault();
+        // No need, but we can recheck just in case
+        if (typedWord === secretWord) {
+            photoFrameEl.classList.remove('locked');
+        }
+    }
+});.lock-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, #ffb6c1, #ff69b4); /* pink gradient */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    cursor: default; /* no more tap-to-unlock */
+    transition: opacity 0.5s;
+    z-index: 5;
+    border-radius: 50%; /* keep it round */
+    font-family: 'Segoe UI', cursive;
+}
+
+.lock-icon {
+    font-size: 50px;
+    margin-bottom: 15px;
+}
+
+.typing-area {
+    position: relative;
+    margin-bottom: 10px;
+}
+
+#secretInput {
+    background: rgba(255,255,255,0.3);
+    border: none;
+    border-bottom: 2px solid white;
+    font-size: 20px;
+    padding: 5px 10px;
+    color: white;
+    text-align: center;
+    outline: none;
+    width: 150px;
+    letter-spacing: 3px;
+    caret-color: white;
+}
+#secretInput::placeholder {
+    color: rgba(255,255,255,0.7);
+    letter-spacing: 1px;
+    font-size: 14px;
+}
+
+.typed-letters {
+    position: absolute;
+    top: -30px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 28px;
+    font-weight: bold;
+    color: white;
+    text-shadow: 1px 1px 2px #d63384;
+    letter-spacing: 4px;
+    pointer-events: none; /* so clicks go to input */
+}
+
+.unlock-hint {
+    color: white;
+    font-size: 12px;
+    margin-top: 5px;
+    text-shadow: 1px 1px 2px black;
+}
+
+/* hide overlay when unlocked */
+.photo-frame:not(.locked) .lock-overlay {
+    opacity: 0;
+    pointer-events: none;
+}<div class="photo-frame locked" id="photoFrame">
+    <img src="YOUR_PHOTO_URL.jpg" alt="Birthday Girl" id="profilePic">
+    <div class="lock-overlay" id="lockOverlay">
+        <div class="lock-icon" id="lockIcon">🔒</div>
+        <div class="typing-area">
+            <input type="text" id="secretInput" maxlength="10" placeholder="type the word..." autocomplete="off">
+            <div class="typed-letters" id="typedDisplay"></div>
+        </div>
+        <p class="unlock-hint">Type the secret word to unlock</p>
+    </div>
+</div>
