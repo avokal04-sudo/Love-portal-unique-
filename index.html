@@ -253,7 +253,7 @@
     </div>
 
     <div class="message" id="typewriter"></div>
-    <button class="btn-surprise" onclick="burstConfetti()">🎉 Click for Surprise!</button>
+    <button class="btn-surprise" onclick="burstConfetti()">🎂 Happy Birthday 🎂</button>
     <div class="hearts-container" id="hearts-container"></div>
 
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1"></script>
@@ -281,9 +281,16 @@
                 lockIcon.textContent = '❤️';
                 typedDisplay.textContent = '❤️❤️❤️';
                 setTimeout(() => {
-                    lockOverlayEl.style.display = 'none';
-                }, 600);
-                burstConfetti();
+    lockOverlayEl.style.display = 'none';
+}, 600);
+// Show the cake!
+const cakeContainer = document.getElementById('cakeContainer');
+if (cakeContainer) {
+    setTimeout(() => {
+        cakeContainer.classList.add('show');
+    }, 400);
+}
+burstConfetti();
             }
         });
 
