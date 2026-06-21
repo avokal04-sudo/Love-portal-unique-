@@ -1,47 +1,451 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>Unlocked ❤️</title>
-  <style>
-    body {
-      text-align: center;
-      background: black;
-      color: pink;
-      font-family: Arial;
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Happy Birthday! ❤️</title>
+    <style>
+        body {
+            margin: 0;
+            min-height: 100vh;
+            background: linear-gradient(-45deg, #ff9a9e, #fad0c4, #fbc2eb, #a18cd1);
+            background-size: 400% 400%;
+            animation: gradientMove 10s ease infinite;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Segoe UI', cursive;
+            overflow-x: hidden;
+            position: relative;
+        }
 
-    h1 {
-      margin-top: 50px;
-    }
+        @keyframes gradientMove {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
 
-    .heart {
-      font-size: 40px;
-      animation: float 2s infinite;
-    }
+        /* Floating background sparkles */
+        .sparkles {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            pointer-events: none;
+            z-index: 0;
+        }
 
-    @keyframes float {
-      0% { transform: translateY(0px); }
-      50% { transform: translateY(-20px); }
-      100% { transform: translateY(0px); }
-    }
-  </style>
+        .sparkle {
+            position: absolute;
+            font-size: 20px;
+            opacity: 0.8;
+            animation: sparkleFloat 3s infinite;
+        }
+
+        @keyframes sparkleFloat {
+            0% { transform: translateY(0) scale(1); opacity: 0.8; }
+            100% { transform: translateY(-100vh) scale(0); opacity: 0; }
+        }
+
+        .photo-frame {
+            position: relative;
+            width: 230px;
+            height: 230px;
+            border-radius: 50%;
+            overflow: hidden;
+            border: 5px solid white;
+            box-shadow: 0 0 30px rgba(255,105,180,0.6);
+            z-index: 2;
+            transition: box-shadow 0.5s;
+        }
+
+        .photo-frame.locked img {
+            filter: blur(18px) brightness(0.5);
+            transition: filter 0.6s ease;
+        }
+
+        .photo-frame:not(.locked) img {
+            filter: blur(0) brightness(1.1);
+            animation: bounce 2s infinite;
+            box-shadow: 0 0 40px rgba(255,20,147,0.8);
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-12px); }
+        }
+
+        .photo-frame img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* Pink lock overlay */
+        .lock-overlay {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: linear-gradient(135deg, #ffb6c1, #ff69b4);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 5;
+            border-radius: 50%;
+            transition: opacity 0.6s;
+            backdrop-filter: blur(2px);
+        }
+
+        .lock-icon {
+            font-size: 50px;
+            margin-bottom: 10px;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.15); }
+            100% { transform: scale(1); }
+        }
+
+        .typing-area {
+            position: relative;
+            margin-bottom: 5px;
+        }
+
+        #secretInput {
+            background: rgba(255,255,255,0.4);
+            border: none;
+            border-bottom: 2px solid white;
+            font-size: 20px;
+            padding: 5px 10px;
+            color: white;
+            text-align: center;
+            outline: none;
+            width: 150px;
+            letter-spacing: 3px;
+            caret-color: white;
+            border-radius: 5px;
+        }
+        #secretInput::placeholder {
+            color: rgba(255,255,255,0.8);
+            letter-spacing: 1px;
+            font-size: 14px;
+        }
+
+        .typed-letters {
+            position: absolute;
+            top: -35px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 28px;
+            font-weight: bold;
+            color: white;
+            text-shadow: 1px 1px 2px #d63384;
+            letter-spacing: 4px;
+            pointer-events: none;
+        }
+
+        .unlock-hint {
+            color: white;
+            font-size: 12px;
+            margin-top: 5px;
+            text-shadow: 1px 1px 2px black;
+        }
+
+        .photo-frame:not(.locked) .lock-overlay {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        /* Cake */
+        .cake-container {
+            margin-top: 25px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            opacity: 0;
+            transform: scale(0.5);
+            transition: all 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            z-index: 3;
+        }
+
+        .cake-container.show {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        .cake {
+            font-size: 80px;
+            filter: drop-shadow(0 10px 10px rgba(0,0,0,0.3));
+            animation: cakeGlow 1.5s infinite alternate;
+        }
+
+        @keyframes cakeGlow {
+            from { filter: drop-shadow(0 0 15px #ff69b4); }
+            to { filter: drop-shadow(0 0 30px #ff1493); }
+        }
+
+        .candle {
+            position: relative;
+            width: 20px;
+            height: 40px;
+            background: linear-gradient(to right, #ff9a9e, #fad0c4);
+            border-radius: 4px 4px 0 0;
+            margin-bottom: -10px;
+        }
+
+        .wick {
+            position: absolute;
+            top: -5px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 2px;
+            height: 8px;
+            background: #333;
+            border-radius: 1px;
+        }
+
+        .flame {
+            position: absolute;
+            top: -28px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 14px;
+            height: 24px;
+            background: radial-gradient(circle, #fff700, #ff9900, #ff3300);
+            border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+            animation: flicker 0.15s infinite alternate;
+            box-shadow: 0 0 10px #ff9900;
+        }
+
+        @keyframes flicker {
+            0% { transform: translateX(-50%) scale(1, 1) rotate(-2deg); opacity: 1; }
+            25% { transform: translateX(-50%) scale(1.1, 0.9) rotate(2deg); opacity: 0.9; }
+            50% { transform: translateX(-50%) scale(0.9, 1.1) rotate(-1deg); opacity: 0.8; }
+            75% { transform: translateX(-50%) scale(1.05, 0.95) rotate(1deg); opacity: 0.9; }
+            100% { transform: translateX(-50%) scale(1, 1) rotate(0deg); opacity: 1; }
+        }
+
+        .message {
+            margin-top: 25px;
+            font-size: 2.8rem;
+            color: white;
+            text-shadow: 2px 2px 8px rgba(0,0,0,0.3);
+            z-index: 3;
+            min-height: 3em;
+            font-weight: bold;
+        }
+
+        .btn-surprise {
+            margin-top: 20px;
+            padding: 12px 30px;
+            font-size: 1.2rem;
+            border: none;
+            border-radius: 30px;
+            background: white;
+            color: #ff6b81;
+            cursor: pointer;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            transition: transform 0.3s;
+            z-index: 3;
+        }
+        .btn-surprise:hover { transform: scale(1.1); background: #fff5f7; }
+
+        .hearts-container, .sparkles-container {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .heart {
+            position: absolute;
+            bottom: -100px;
+            font-size: 24px;
+            color: rgba(255, 255, 255, 0.8);
+            animation: floatUp linear infinite;
+        }
+
+        @keyframes floatUp {
+            0% {
+                transform: translateY(0) rotate(0deg);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-110vh) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        /* Additional romantic glow */
+        .glow-text {
+            animation: glow 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes glow {
+            from { text-shadow: 0 0 10px #fff, 0 0 20px #ff69b4, 0 0 30px #ff69b4; }
+            to { text-shadow: 0 0 20px #fff, 0 0 30px #ff1493, 0 0 40px #ff1493; }
+        }
+    </style>
 </head>
-
 <body>
 
-  <h1>🎉 Welcome My Love ❤️</h1>
+    <!-- Background sparkles (will be generated by JS) -->
+    <div class="sparkles" id="sparklesContainer"></div>
 
-  <p>I love you forever 💖</p>
+    <!-- Hidden audio element that will play after unlock -->
+    <audio id="bgMusic" loop>
+        <source src="Henok Abebe - Leyu Ken.mp3" type="audio/mpeg">
+    </audio>
 
-  <div class="heart">💖💖💖</div>
+    <div class="photo-frame locked" id="photoFrame">
+        <!-- 🔽 USE YOUR GIRLFRIEND'S PHOTO FILENAME HERE -->
+        <img src="IMG_20260513_002911_084.jpg" alt="Birthday Girl" id="profilePic">
+        <div class="lock-overlay" id="lockOverlay">
+            <div class="lock-icon" id="lockIcon">🔒</div>
+            <div class="typing-area">
+                <input type="text" id="secretInput" maxlength="10" placeholder="type the word..." autocomplete="off">
+                <div class="typed-letters" id="typedDisplay"></div>
+            </div>
+            <p class="unlock-hint">Type the secret word to unlock</p>
+        </div>
+    </div>
 
-  <!-- MUSIC -->
-  <audio autoplay loop>
-    <source src="music.mp3" type="audio/mp3">
-  </audio>
+    <!-- Cake (hidden until unlock) -->
+    <div class="cake-container" id="cakeContainer">
+        <div class="candle">
+            <div class="flame"></div>
+            <div class="wick"></div>
+        </div>
+        <div class="cake">🎂</div>
+    </div>
 
-  <!-- IMAGE -->
-  <img src="love.jpg" width="250">
+    <div class="message glow-text" id="typewriter"></div>
+    <button class="btn-surprise" onclick="burstConfetti()">🎂 Happy Birthday Yenefkr 🎂</button>
+    <div class="hearts-container" id="heartsContainer"></div>
 
+    <!-- Confetti library -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1"></script>
+    <script>
+        // ====== 1. UNLOCK WITH SECRET WORD ======
+        const secretWord = "love";   // <-- Change to any word (lowercase)
+        let typedWord = "";
+        const inputField = document.getElementById('secretInput');
+        const typedDisplay = document.getElementById('typedDisplay');
+        const lockOverlayEl = document.getElementById('lockOverlay');
+        const photoFrameEl = document.getElementById('photoFrame');
+        const lockIcon = document.getElementById('lockIcon');
+        const cakeContainer = document.getElementById('cakeContainer');
+        const bgMusic = document.getElementById('bgMusic');
+
+        window.addEventListener('load', () => {
+            inputField.focus();
+            createBackgroundSparkles();
+            startFloatingHearts(); // hearts start right away
+        });
+
+        inputField.addEventListener('input', (e) => {
+            const currentInput = e.target.value.toLowerCase();
+            typedWord = currentInput;
+            typedDisplay.textContent = typedWord;
+
+            if (typedWord === secretWord) {
+                // UNLOCK!
+                photoFrameEl.classList.remove('locked');
+                lockIcon.textContent = '❤️';
+                typedDisplay.textContent = '❤️❤️❤️';
+                // Hide overlay
+                setTimeout(() => {
+                    lockOverlayEl.style.display = 'none';
+                }, 600);
+                // Show cake
+                setTimeout(() => {
+                    cakeContainer.classList.add('show');
+                }, 400);
+                // Play music
+                if (bgMusic) {
+                    bgMusic.play().catch(e => console.log("Music play prevented until user gesture. But we'll try again."));
+                }
+                // Confetti blast
+                burstConfetti();
+                // Extra celebratory sparkles
+                createExtraSparkles();
+            }
+        });
+
+        // ====== 2. TYPEWRITER ======
+        const messageText = "Happy Birthday, Yenefkr! ❤️";  // <-- Change name as you like
+        const speed = 100;
+        let i = 0;
+        const typewriterEl = document.getElementById('typewriter');
+
+        function typeWriter() {
+            if (i < messageText.length) {
+                typewriterEl.innerHTML += messageText.charAt(i);
+                i++;
+                setTimeout(typeWriter, speed);
+            }
+        }
+        window.addEventListener('load', () => {
+            setTimeout(typeWriter, 1500);
+        });
+
+        // ====== 3. CONFETTI ======
+        function burstConfetti() {
+            confetti({
+                particleCount: 150,
+                spread: 80,
+                origin: { y: 0.6 }
+            });
+            setTimeout(() => confetti({ particleCount: 80, angle: 60, spread: 55, origin: { x: 0 } }), 200);
+            setTimeout(() => confetti({ particleCount: 80, angle: 120, spread: 55, origin: { x: 1 } }), 400);
+        }
+
+        // ====== 4. FLOATING HEARTS ======
+        function startFloatingHearts() {
+            setInterval(() => {
+                const heart = document.createElement('div');
+                heart.classList.add('heart');
+                heart.innerHTML = ['❤️','💕','💖','💘','💝'][Math.floor(Math.random()*5)];
+                heart.style.left = Math.random() * 100 + '%';
+                heart.style.animationDuration = Math.random() * 5 + 5 + 's';
+                heart.style.fontSize = Math.random() * 20 + 15 + 'px';
+                document.getElementById('heartsContainer').appendChild(heart);
+                setTimeout(() => heart.remove(), 10000);
+            }, 400);
+        }
+
+        // ====== 5. BACKGROUND SPARKLES ======
+        function createBackgroundSparkles() {
+            const container = document.getElementById('sparklesContainer');
+            for (let i = 0; i < 20; i++) {
+                const sparkle = document.createElement('div');
+                sparkle.classList.add('sparkle');
+                sparkle.innerHTML = '✨';
+                sparkle.style.left = Math.random() * 100 + '%';
+                sparkle.style.top = Math.random() * 100 + '%';
+                sparkle.style.animationDuration = Math.random() * 4 + 3 + 's';
+                sparkle.style.animationDelay = Math.random() * 5 + 's';
+                container.appendChild(sparkle);
+            }
+        }
+
+        function createExtraSparkles() {
+            const container = document.getElementById('sparklesContainer');
+            for (let i = 0; i < 15; i++) {
+                const sparkle = document.createElement('div');
+                sparkle.classList.add('sparkle');
+                sparkle.innerHTML = '✨';
+                sparkle.style.left = Math.random() * 100 + '%';
+                sparkle.style.top = Math.random() * 100 + '%';
+                sparkle.style.animationDuration = Math.random() * 2 + 2 + 's';
+                container.appendChild(sparkle);
+                setTimeout(() => sparkle.remove(), 3000);
+            }
+        }
+    </script>
 </body>
-</html>
+  </html>
