@@ -19,7 +19,6 @@
             position: relative;
         }
 
-        /* Background floating photos (duplicated) */
         .floating-photos {
             position: fixed;
             top: 0; left: 0;
@@ -44,7 +43,6 @@
             100% { transform: translate(20px, -30px) rotate(15deg); }
         }
 
-        /* Music player */
         .music-player {
             position: fixed;
             top: 20px;
@@ -85,7 +83,6 @@
             font-family: 'Segoe UI', sans-serif;
         }
 
-        /* Main container */
         .container {
             position: relative;
             z-index: 2;
@@ -106,7 +103,6 @@
             text-align: center;
         }
 
-        /* Love letters (3 special cards) */
         .love-letters {
             display: flex;
             flex-wrap: wrap;
@@ -144,7 +140,6 @@
             font-style: italic;
         }
 
-        /* Expanded letter detail (hidden) */
         .letter-detail {
             display: none;
             margin-top: 10px;
@@ -157,7 +152,6 @@
             display: block;
         }
 
-        /* Phrase cards (tsufes) */
         .phrase-card {
             background: rgba(255,255,255,0.05);
             backdrop-filter: blur(12px);
@@ -178,14 +172,8 @@
         }
 
         @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(40px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+            from { opacity: 0; transform: translateY(40px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
         .phrase-card:hover {
@@ -214,7 +202,6 @@
             margin: 0 10px;
         }
 
-        /* Floating emojis inside phrase card */
         .floating-emoji {
             animation: float 3s infinite alternate;
         }
@@ -224,7 +211,6 @@
             100% { transform: translateY(-8px); }
         }
 
-        /* Responsive */
         @media (max-width: 600px) {
             .phrase-card {
                 flex-direction: column;
@@ -238,24 +224,21 @@
 </head>
 <body>
 
-    <!-- Background duplicated photos (floating) -->
     <div class="floating-photos" id="floatingPhotos"></div>
 
-    <!-- Music player with pause/resume -->
     <div class="music-player">
         <span class="music-title">🎵 Our Song</span>
         <button class="play-pause-btn" id="playPauseBtn">⏯️</button>
     </div>
 
-    <!-- Hidden audio element -->
     <audio id="loveMusic" loop>
-        <source src="YOUR_MUSIC_FILE.mp3" type="audio/mpeg">
+        <!-- Keep your love page music or use the same one -->
+        <source src="Henok Abebe - Leyu Ken.mp3" type="audio/mpeg">
     </audio>
 
     <div class="container">
         <div class="section-title">💌 የኔ ፍቅር (My Love)</div>
 
-        <!-- 3 Love Letters -->
         <div class="love-letters">
             <div class="letter-card" onclick="toggleLetter(this)">
                 <div class="letter-emoji">💌</div>
@@ -274,53 +257,52 @@
             </div>
         </div>
 
-        <!-- Separated tsufes (Amharic phrases) -->
         <div class="section-title">🌟 የተለያዩ ፍቅራዊ ቃላት (Special Words)</div>
 
         <div class="phrase-card">
-            <img class="phrase-photo" src="IMG_20260513_002911_084.jpg" alt="Her">
+            <img class="phrase-photo" src="love.jpg" alt="Her">
             <span class="phrase-text">ማሬ (Mare)</span>
             <span class="phrase-emoji floating-emoji">💛</span>
         </div>
 
         <div class="phrase-card">
-            <img class="phrase-photo" src="IMG_20260513_002911_084.jpg" alt="Her">
+            <img class="phrase-photo" src="love.jpg" alt="Her">
             <span class="phrase-text">ፍቅሬ (Fikre)</span>
             <span class="phrase-emoji floating-emoji">💜</span>
         </div>
 
         <div class="phrase-card">
-            <img class="phrase-photo" src="IMG_20260513_002911_084.jpg" alt="Her">
+            <img class="phrase-photo" src="love.jpg" alt="Her">
             <span class="phrase-text">እወድሻለሁ (Ewedshalehu)</span>
             <span class="phrase-emoji floating-emoji">💙</span>
         </div>
 
         <div class="phrase-card">
-            <img class="phrase-photo" src="IMG_20260513_002911_084.jpg" alt="Her">
+            <img class="phrase-photo" src="love.jpg" alt="Her">
             <span class="phrase-text">አፈቅርሻለሁ (Afekrshalehu)</span>
             <span class="phrase-emoji floating-emoji">💚</span>
         </div>
 
         <div class="phrase-card">
-            <img class="phrase-photo" src="IMG_20260513_002911_084.jpg" alt="Her">
+            <img class="phrase-photo" src="love.jpg" alt="Her">
             <span class="phrase-text">የኔምስት (Yenemist)</span>
             <span class="phrase-emoji floating-emoji">🧡</span>
         </div>
 
         <div class="phrase-card">
-            <img class="phrase-photo" src="IMG_20260513_002911_084.jpg" alt="Her">
+            <img class="phrase-photo" src="love.jpg" alt="Her">
             <span class="phrase-text">የኔ መልአክ (Yenemelak)</span>
             <span class="phrase-emoji floating-emoji">👼</span>
         </div>
 
         <div class="phrase-card">
-            <img class="phrase-photo" src="IMG_20260513_002911_084.jpg" alt="Her">
+            <img class="phrase-photo" src="love.jpg" alt="Her">
             <span class="phrase-text">ቃንቺ በፊት ያደረግኝ (Kanchi befit yadrgegn)</span>
             <span class="phrase-emoji floating-emoji">💗</span>
         </div>
 
         <div class="phrase-card">
-            <img class="phrase-photo" src="IMG_20260513_002911_084.jpg" alt="Her">
+            <img class="phrase-photo" src="love.jpg" alt="Her">
             <span class="phrase-text">ክፉሽን አልይ (Kfushn aly)</span>
             <span class="phrase-emoji floating-emoji">💞</span>
         </div>
@@ -329,10 +311,9 @@
     </div>
 
     <script>
-        // Duplicate the photo as floating background elements
         function createFloatingPhotos() {
             const container = document.getElementById('floatingPhotos');
-            const photoSrc = 'IMG_20260513_002911_084.jpg';  // same photo
+            const photoSrc = 'love.jpg';
             for (let i = 0; i < 12; i++) {
                 const img = document.createElement('img');
                 img.src = photoSrc;
@@ -345,12 +326,10 @@
             }
         }
 
-        // Toggle love letter detail
         function toggleLetter(card) {
             card.classList.toggle('open');
         }
 
-        // Music player controls
         const loveMusic = document.getElementById('loveMusic');
         const playPauseBtn = document.getElementById('playPauseBtn');
         let isPlaying = false;
@@ -367,19 +346,16 @@
             }
         });
 
-        // Auto-play attempt on page load (may be blocked)
         window.addEventListener('load', () => {
             createFloatingPhotos();
             loveMusic.play().then(() => {
                 isPlaying = true;
                 playPauseBtn.textContent = '⏸️';
             }).catch(() => {
-                // user needs to interact first
                 playPauseBtn.textContent = '▶️';
             });
         });
 
-        // Fallback: enable music on first click anywhere if not started
         document.body.addEventListener('click', () => {
             if (loveMusic.paused && !isPlaying) {
                 loveMusic.play();
@@ -389,4 +365,4 @@
         }, { once: true });
     </script>
 </body>
-  </html>
+    </html>
