@@ -85,7 +85,6 @@
             object-fit: cover;
         }
 
-        /* Lock overlay – uses love.jpg as background */
         .lock-overlay {
             position: absolute;
             top: 0; left: 0;
@@ -125,24 +124,24 @@
         }
 
         #secretInput {
-            background: rgba(255,255,255,0.4);
-            border: none;
-            border-bottom: 2px solid white;
-            font-size: 20px;
-            padding: 5px 10px;
-            color: white;
+            background: rgba(255,255,255,0.6);
+            border: 2px solid white;
+            font-size: 22px;
+            padding: 8px 12px;
+            color: #ff1493;
             text-align: center;
             outline: none;
-            width: 150px;
-            letter-spacing: 3px;
-            caret-color: white;
-            border-radius: 5px;
-            filter: none;
+            width: 160px;
+            letter-spacing: 4px;
+            caret-color: #ff1493;
+            border-radius: 8px;
+            font-weight: bold;
         }
         #secretInput::placeholder {
-            color: rgba(255,255,255,0.8);
+            color: rgba(255,20,147,0.6);
             letter-spacing: 1px;
-            font-size: 14px;
+            font-size: 15px;
+            font-weight: normal;
         }
 
         .typed-letters {
@@ -150,22 +149,25 @@
             top: -35px;
             left: 50%;
             transform: translateX(-50%);
-            font-size: 28px;
+            font-size: 30px;
             font-weight: bold;
             color: white;
             text-shadow: 1px 1px 2px #d63384;
-            letter-spacing: 4px;
+            letter-spacing: 5px;
             pointer-events: none;
             filter: none;
         }
 
         .unlock-hint {
             color: white;
-            font-size: 12px;
-            margin-top: 5px;
-            text-shadow: 1px 1px 2px black;
+            font-size: 14px;
+            margin-top: 8px;
+            text-shadow: 1px 1px 3px black;
             filter: none;
             z-index: 6;
+            background: rgba(0,0,0,0.3);
+            padding: 4px 12px;
+            border-radius: 20px;
         }
 
         .photo-frame:not(.locked) .lock-overlay {
@@ -250,6 +252,8 @@
             min-height: 3em;
             font-weight: bold;
             text-align: center;
+            /* Visible, but empty initially */
+            visibility: visible;
         }
 
         .btn-surprise, .btn-next {
@@ -321,23 +325,17 @@
 
     <div class="sparkles" id="sparklesContainer"></div>
 
-    <!-- Lock music (unchanged) -->
-    <audio id="preLockMusic" loop autoplay>
+    <!-- Both pre-lock and post-unlock use the same classical guitar song -->
+    <audio id="guitarMusic" loop>
         <source src="Birthday - Happy Birthday Classical Guitar V.mp3" type="audio/mpeg">
     </audio>
 
-    <!-- Post-unlock music – now Henok Abebe -->
-    <audio id="bgMusic" loop>
-        <source src="Henok Abebe - Leyu Ken.mp3" type="audio/mpeg">
-    </audio>
-
     <div class="photo-frame locked" id="photoFrame">
-        <!-- The clear photo underneath (love.jpg) -->
         <img src="love.jpg" alt="Birthday Girl" id="profilePic">
         <div class="lock-overlay" id="lockOverlay">
             <div class="lock-icon" id="lockIcon">🔒</div>
             <div class="typing-area">
-                <input type="text" id="secretInput" maxlength="10" placeholder="type the word..." autocomplete="off">
+                <input type="text" id="secretInput" maxlength="10" placeholder="secret code..." autocomplete="off">
                 <div class="typed-letters" id="typedDisplay"></div>
             </div>
             <p class="unlock-hint">Type the secret number to unlock</p>
@@ -352,7 +350,7 @@
         <div class="cake">🎂</div>
     </div>
 
-    <div class="message glow-text" id="typewriter"></div>
+    <div class="message" id="typewriter"></div>
     <button class="btn-surprise" onclick="burstConfetti()">🎂 Happy Birthday 🎂</button>
     <button class="btn-next" id="btnNext" onclick="goToLovePage()">💌 Continue to Your Surprise 💌</button>
 
@@ -370,9 +368,25 @@
         const photoFrameEl = document.getElementById('photoFrame');
         const lockIcon = document.getElementById('lockIcon');
         const cakeContainer = document.getElementById('cakeContainer');
-        const bgMusic = document.getElementById('bgMusic');
-        const preLockMusic = document.getElementById('preLockMusic');
+        const guitarMusic = document.getElementById('guitarMusic');
         const btnNext = document.getElementById('btnNext');
+        const messageEl = document.getElementById('typewriter');
+        let unlocked = false;
+        let musicStarted = false;
+
+        // Try to start music when user clicks the input field (browser requires user gesture)
+        function startMusic() {
+            if (!musicStarted && guitarMusic) {
+                guitarMusic.play().then(() => {
+                    musicStarted = true;
+                }).catch(() => {});
+            }
+        }
+
+        inputField.addEventListener('focus', startMusic);
+        inputField.addEventListener('click', startMusic);
+        // Also try on whole document first interaction (safety)
+        document.body.addEventListener('click', startMusic, { once: true });
 
         window.addEventListener('load', () => {
             inputField.focus();
@@ -383,21 +397,19 @@
         });
 
         inputField.addEventListener('input', (e) => {
+            if (unlocked) return;
             const currentInput = e.target.value.toLowerCase();
             typedWord = currentInput;
             typedDisplay.textContent = typedWord;
 
             if (typedWord === secretWord) {
+                unlocked = true;
                 photoFrameEl.classList.remove('locked');
                 lockIcon.textContent = '❤️';
                 typedDisplay.textContent = '❤️❤️❤️';
-                if (preLockMusic) {
-                    preLockMusic.pause();
-                    preLockMusic.currentTime = 0;
-                }
-                if (bgMusic) {
-                    bgMusic.play().catch(() => {});
-                }
+                // Guitar music already playing, just keep it going (don't stop/restart)
+                // Start the typing message
+                startTypewriter();
                 setTimeout(() => {
                     lockOverlayEl.style.display = 'none';
                 }, 600);
@@ -415,18 +427,19 @@
         const messageText = "Happy Birthday, My Love! ❤️";
         const speed = 100;
         let i = 0;
-        const typewriterEl = document.getElementById('typewriter');
 
-        function typeWriter() {
-            if (i < messageText.length) {
-                typewriterEl.innerHTML += messageText.charAt(i);
-                i++;
-                setTimeout(typeWriter, speed);
+        function startTypewriter() {
+            messageEl.innerHTML = ''; // clear any existing
+            i = 0;
+            function type() {
+                if (i < messageText.length) {
+                    messageEl.innerHTML += messageText.charAt(i);
+                    i++;
+                    setTimeout(type, speed);
+                }
             }
+            type();
         }
-        window.addEventListener('load', () => {
-            setTimeout(typeWriter, 1500);
-        });
 
         function burstConfetti() {
             confetti({ particleCount: 150, spread: 80, origin: { y: 0.6 } });
