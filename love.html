@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>With All My Love 💖</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: linear-gradient(135deg, #1a0a1a, #2d0a2d);
+            font-family: 'Georgia', serif;
+            color: #fff;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Background floating photos (duplicated) */
+        .floating-photos {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .floating-photo {
+            position: absolute;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid rgba(255,255,255,0.4);
+            animation: floatAround 12s infinite alternate;
+            opacity: 0.6;
+        }
+
+        @keyframes floatAround {
+            0% { transform: translate(0, 0) rotate(0deg); }
+            100% { transform: translate(20px, -30px) rotate(15deg); }
+        }
+
+        /* Music player */
+        .music-player {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: rgba(255,255,255,0.15);
+            backdrop-filter: blur(10px);
+            border-radius: 50px;
+            padding: 10px 20px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            z-index: 100;
+            border: 1px solid rgba(255,255,255,0.3);
+        }
+
+        .play-pause-btn {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 28px;
+            cursor: pointer;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(255,255,255,0.2);
+            border-radius: 50%;
+        }
+
+        .play-pause-btn:hover {
+            background: rgba(255,255,255,0.4);
+        }
+
+        .music-title {
+            font-size: 14px;
+            color: #ffb6c1;
+            font-family: 'Segoe UI', sans-serif;
+        }
+
+        /* Main container */
+        .container {
+            position: relative;
+            z-index: 2;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 40px 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .section-title {
+            font-size: 2.5rem;
+            color: #ff69b4;
+            text-shadow: 0 0 20px #ff1493;
+            margin: 40px 0 20px;
+            font-family: 'Dancing Script', cursive;
+            text-align: center;
+        }
+
+        /* Love letters (3 special cards) */
+        .love-letters {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 25px;
+            margin: 30px 0;
+        }
+
+        .letter-card {
+            background: rgba(255,255,255,0.1);
+            backdrop-filter: blur(8px);
+            border-radius: 20px;
+            padding: 30px;
+            width: 220px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.4s;
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+
+        .letter-card:hover {
+            transform: scale(1.05);
+            background: rgba(255,255,255,0.25);
+            box-shadow: 0 0 30px #ff69b4;
+        }
+
+        .letter-emoji {
+            font-size: 50px;
+        }
+
+        .letter-text {
+            margin-top: 15px;
+            font-size: 1.2rem;
+            color: #f8e0e6;
+            font-style: italic;
+        }
+
+        /* Expanded letter detail (hidden) */
+        .letter-detail {
+            display: none;
+            margin-top: 10px;
+            font-size: 0.9rem;
+            color: #ffe4ec;
+            line-height: 1.5;
+        }
+
+        .letter-card.open .letter-detail {
+            display: block;
+        }
+
+        /* Phrase cards (tsufes) */
+        .phrase-card {
+            background: rgba(255,255,255,0.05);
+            backdrop-filter: blur(12px);
+            border-radius: 30px;
+            padding: 30px 40px;
+            margin: 20px 0;
+            width: 100%;
+            text-align: center;
+            border-left: 5px solid #ff69b4;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            transition: transform 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 25px;
+            flex-wrap: wrap;
+            justify-content: center;
+            animation: fadeInUp 0.6s ease both;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(40px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .phrase-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .phrase-photo {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid #ff69b4;
+            box-shadow: 0 0 15px #ff1493;
+        }
+
+        .phrase-text {
+            font-size: 2rem;
+            color: #ffb6c1;
+            font-family: 'Segoe UI', cursive;
+            font-weight: bold;
+            text-shadow: 1px 1px 5px black;
+        }
+
+        .phrase-emoji {
+            font-size: 30px;
+            margin: 0 10px;
+        }
+
+        /* Floating emojis inside phrase card */
+        .floating-emoji {
+            animation: float 3s infinite alternate;
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0); }
+            100% { transform: translateY(-8px); }
+        }
+
+        /* Responsive */
+        @media (max-width: 600px) {
+            .phrase-card {
+                flex-direction: column;
+                padding: 20px;
+            }
+            .phrase-text {
+                font-size: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Background duplicated photos (floating) -->
+    <div class="floating-photos" id="floatingPhotos"></div>
+
+    <!-- Music player with pause/resume -->
+    <div class="music-player">
+        <span class="music-title">🎵 Our Song</span>
+        <button class="play-pause-btn" id="playPauseBtn">⏯️</button>
+    </div>
+
+    <!-- Hidden audio element -->
+    <audio id="loveMusic" loop>
+        <source src="YOUR_MUSIC_FILE.mp3" type="audio/mpeg">
+    </audio>
+
+    <div class="container">
+        <div class="section-title">💌 የኔ ፍቅር (My Love)</div>
+
+        <!-- 3 Love Letters -->
+        <div class="love-letters">
+            <div class="letter-card" onclick="toggleLetter(this)">
+                <div class="letter-emoji">💌</div>
+                <div class="letter-text">To My Everything</div>
+                <div class="letter-detail">You are the light of my life, the reason I smile every day. I cherish you beyond words. ❤️</div>
+            </div>
+            <div class="letter-card" onclick="toggleLetter(this)">
+                <div class="letter-emoji">💝</div>
+                <div class="letter-text">My Forever</div>
+                <div class="letter-detail">From the moment I met you, I knew you were my destiny. I'll love you until the end of time. 💫</div>
+            </div>
+            <div class="letter-card" onclick="toggleLetter(this)">
+                <div class="letter-emoji">💖</div>
+                <div class="letter-text">You Are My World</div>
+                <div class="letter-detail">Every heartbeat of mine whispers your name. You are my safe place, my home. 🏡💕</div>
+            </div>
+        </div>
+
+        <!-- Separated tsufes (Amharic phrases) -->
+        <div class="section-title">🌟 የተለያዩ ፍቅራዊ ቃላት (Special Words)</div>
+
+        <div class="phrase-card">
+            <img class="phrase-photo" src="IMG_20260513_002911_084.jpg" alt="Her">
+            <span class="phrase-text">ማሬ (Mare)</span>
+            <span class="phrase-emoji floating-emoji">💛</span>
+        </div>
+
+        <div class="phrase-card">
+            <img class="phrase-photo" src="IMG_20260513_002911_084.jpg" alt="Her">
+            <span class="phrase-text">ፍቅሬ (Fikre)</span>
+            <span class="phrase-emoji floating-emoji">💜</span>
+        </div>
+
+        <div class="phrase-card">
+            <img class="phrase-photo" src="IMG_20260513_002911_084.jpg" alt="Her">
+            <span class="phrase-text">እወድሻለሁ (Ewedshalehu)</span>
+            <span class="phrase-emoji floating-emoji">💙</span>
+        </div>
+
+        <div class="phrase-card">
+            <img class="phrase-photo" src="IMG_20260513_002911_084.jpg" alt="Her">
+            <span class="phrase-text">አፈቅርሻለሁ (Afekrshalehu)</span>
+            <span class="phrase-emoji floating-emoji">💚</span>
+        </div>
+
+        <div class="phrase-card">
+            <img class="phrase-photo" src="IMG_20260513_002911_084.jpg" alt="Her">
+            <span class="phrase-text">የኔምስት (Yenemist)</span>
+            <span class="phrase-emoji floating-emoji">🧡</span>
+        </div>
+
+        <div class="phrase-card">
+            <img class="phrase-photo" src="IMG_20260513_002911_084.jpg" alt="Her">
+            <span class="phrase-text">የኔ መልአክ (Yenemelak)</span>
+            <span class="phrase-emoji floating-emoji">👼</span>
+        </div>
+
+        <div class="phrase-card">
+            <img class="phrase-photo" src="IMG_20260513_002911_084.jpg" alt="Her">
+            <span class="phrase-text">ቃንቺ በፊት ያደረግኝ (Kanchi befit yadrgegn)</span>
+            <span class="phrase-emoji floating-emoji">💗</span>
+        </div>
+
+        <div class="phrase-card">
+            <img class="phrase-photo" src="IMG_20260513_002911_084.jpg" alt="Her">
+            <span class="phrase-text">ክፉሽን አልይ (Kfushn aly)</span>
+            <span class="phrase-emoji floating-emoji">💞</span>
+        </div>
+
+        <div style="height: 100px;"></div>
+    </div>
+
+    <script>
+        // Duplicate the photo as floating background elements
+        function createFloatingPhotos() {
+            const container = document.getElementById('floatingPhotos');
+            const photoSrc = 'IMG_20260513_002911_084.jpg';  // same photo
+            for (let i = 0; i < 12; i++) {
+                const img = document.createElement('img');
+                img.src = photoSrc;
+                img.classList.add('floating-photo');
+                img.style.left = Math.random() * 90 + '%';
+                img.style.top = Math.random() * 90 + '%';
+                img.style.animationDelay = Math.random() * 5 + 's';
+                img.style.animationDuration = (Math.random() * 10 + 8) + 's';
+                container.appendChild(img);
+            }
+        }
+
+        // Toggle love letter detail
+        function toggleLetter(card) {
+            card.classList.toggle('open');
+        }
+
+        // Music player controls
+        const loveMusic = document.getElementById('loveMusic');
+        const playPauseBtn = document.getElementById('playPauseBtn');
+        let isPlaying = false;
+
+        playPauseBtn.addEventListener('click', () => {
+            if (isPlaying) {
+                loveMusic.pause();
+                playPauseBtn.textContent = '▶️';
+                isPlaying = false;
+            } else {
+                loveMusic.play().catch(e => alert('Tap the page first to enable music.'));
+                playPauseBtn.textContent = '⏸️';
+                isPlaying = true;
+            }
+        });
+
+        // Auto-play attempt on page load (may be blocked)
+        window.addEventListener('load', () => {
+            createFloatingPhotos();
+            loveMusic.play().then(() => {
+                isPlaying = true;
+                playPauseBtn.textContent = '⏸️';
+            }).catch(() => {
+                // user needs to interact first
+                playPauseBtn.textContent = '▶️';
+            });
+        });
+
+        // Fallback: enable music on first click anywhere if not started
+        document.body.addEventListener('click', () => {
+            if (loveMusic.paused && !isPlaying) {
+                loveMusic.play();
+                isPlaying = true;
+                playPauseBtn.textContent = '⏸️';
+            }
+        }, { once: true });
+    </script>
+</body>
+  </html>
