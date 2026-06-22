@@ -8,7 +8,6 @@
         body {
             margin: 0;
             min-height: 100vh;
-            /* PINK animated gradient – no external image */
             background: linear-gradient(-45deg, #ff9a9e, #fad0c4, #fbc2eb, #ffb6c1);
             background-size: 400% 400%;
             animation: gradientMove 12s ease infinite;
@@ -27,7 +26,6 @@
             100% { background-position: 0% 50%; }
         }
 
-        /* Floating sparkles & hearts (decorative) */
         .sparkles-container {
             position: fixed;
             top: 0; left: 0;
@@ -102,7 +100,7 @@
 
         .lock-icon {
             font-size: 55px;
-            margin-bottom: 10px;
+            margin-bottom: 5px;
             animation: pulse 2s infinite;
             filter: none;
             z-index: 6;
@@ -113,57 +111,33 @@
             50% { transform: scale(1.2); }
         }
 
-        .typing-area {
-            position: relative;
-            margin: 5px 0;
-            filter: none;
-            z-index: 6;
-        }
-
-        #secretInput {
-            background: rgba(255,255,255,0.7);
-            border: 2px solid white;
-            font-size: 22px;
-            padding: 10px 15px;
-            color: #d63384;
-            text-align: center;
-            outline: none;
-            width: 180px;
-            letter-spacing: 5px;
-            caret-color: #d63384;
-            border-radius: 30px;
-            font-weight: bold;
-            transition: 0.3s;
-        }
-        #secretInput:focus {
-            background: white;
-            box-shadow: 0 0 25px #ff1493;
-        }
-        #secretInput::placeholder {
-            color: #d63384;
-            letter-spacing: 1px;
-            font-size: 16px;
-            opacity: 0.7;
-        }
-
-        .typed-letters {
-            position: absolute;
-            top: -40px;
-            left: 50%;
-            transform: translateX(-50%);
-            font-size: 32px;
-            font-weight: bold;
+        /* Unlock button inside overlay */
+        .unlock-btn {
+            background: linear-gradient(135deg, #ff1493, #ff69b4);
             color: white;
-            text-shadow: 0 0 10px #ff1493;
-            letter-spacing: 6px;
-            pointer-events: none;
+            border: 2px solid white;
+            font-size: 1.3rem;
+            font-weight: bold;
+            padding: 12px 28px;
+            border-radius: 40px;
+            cursor: pointer;
+            margin: 10px 0;
+            letter-spacing: 1px;
+            box-shadow: 0 0 25px #ff1493;
+            transition: 0.3s;
+            z-index: 6;
             filter: none;
+            font-family: 'Segoe UI', cursive;
+        }
+
+        .unlock-btn:hover {
+            transform: scale(1.05);
+            background: linear-gradient(135deg, #ff69b4, #ff1493);
         }
 
         .unlock-hint {
             color: white;
-            font-size: 14px;
-            margin-top: 10px;
+            font-size: 13px;
             background: rgba(0,0,0,0.3);
             padding: 5px 15px;
             border-radius: 20px;
@@ -267,7 +241,7 @@
         }
 
         .btn-surprise, .btn-next {
-            margin-top: 20px;
+            margin-top: 15px;
             padding: 12px 30px;
             font-size: 1.2rem;
             border: none;
@@ -327,8 +301,8 @@
             100% { transform: translateY(-110vh) rotate(15deg); opacity: 0; }
         }
 
-        /* Choice notes after unlock */
-        .choice-notes {
+        /* Special message buttons after unlock */
+        .special-messages {
             display: none;
             z-index: 3;
             margin-top: 20px;
@@ -336,35 +310,42 @@
             flex-wrap: wrap;
             justify-content: center;
         }
-        .choice-notes.show {
+        .special-messages.show {
             display: flex;
         }
-        .choice-card {
+
+        .msg-btn {
             background: rgba(255,255,255,0.3);
             backdrop-filter: blur(12px);
-            border-radius: 20px;
-            padding: 15px 20px;
+            border-radius: 25px;
+            padding: 12px 18px;
             color: white;
+            border: 1px solid rgba(255,255,255,0.5);
+            font-size: 1.3rem;
             cursor: pointer;
             transition: 0.3s;
-            border: 1px solid rgba(255,255,255,0.5);
             font-weight: bold;
-            font-size: 1rem;
+            min-width: 80px;
             text-align: center;
-            min-width: 120px;
         }
-        .choice-card:hover {
+        .msg-btn:hover {
             background: rgba(255,255,255,0.6);
             color: #d63384;
             transform: translateY(-5px);
         }
-        .hidden-message {
+
+        .msg-hidden {
             display: none;
-            margin-top: 10px;
             font-size: 0.9rem;
+            margin-top: 8px;
             color: #ffe4ec;
+            background: rgba(0,0,0,0.2);
+            border-radius: 15px;
+            padding: 8px 15px;
+            max-width: 250px;
+            text-align: center;
         }
-        .choice-card.open .hidden-message {
+        .msg-btn.open .msg-hidden {
             display: block;
         }
     </style>
@@ -372,20 +353,18 @@
 <body>
     <div class="sparkles-container" id="sparklesContainer"></div>
 
-    <!-- Guitar music (starts on user click) -->
-    <audio id="guitarMusic" loop>
-        <source src="Birthday - Happy Birthday Classical Guitar V.mp3" type="audio/mpeg">
+    <!-- Guitar music – plays on unlock click -->
+    <audio id="http.mp3" loop>
+        <source src="http.mp3" type="audio/mpeg">
     </audio>
 
     <div class="photo-frame locked" id="photoFrame">
         <img src="love.jpg" alt="Birthday Girl" id="profilePic">
         <div class="lock-overlay" id="lockOverlay">
-            <div class="lock-icon" id="lockIcon">🔒</div>
-            <div class="typing-area">
-                <input type="text" id="secretInput" maxlength="10" placeholder="secret code..." autocomplete="off">
-                <div class="typed-letters" id="typedDisplay"></div>
-            </div>
-            <p class="unlock-hint">Type the secret number to unlock</p>
+            <div class="lock-icon">🔒</div>
+            <!-- Click this button to unlock -->
+            <button class="unlock-btn" id="unlockButton">🎂 Happy Birthday 🎂</button>
+            <p class="unlock-hint">Click the button to unlock 💖</p>
         </div>
     </div>
 
@@ -402,19 +381,23 @@
     <button class="btn-surprise" onclick="burstConfetti()">🎂 Happy Birthday 🎂</button>
     <button class="btn-next" id="btnNext" onclick="goToLovePage()">💌 Continue to Your Surprise 💌</button>
 
-    <!-- Choice notes that appear after unlock -->
-    <div class="choice-notes" id="choiceNotes">
-        <div class="choice-card" onclick="this.classList.toggle('open')">
-            💌 Sweet Note 1
-            <div class="hidden-message">You are my forever love.</div>
+    <!-- Interactive message buttons (visible after unlock) -->
+    <div class="special-messages" id="specialMessages">
+        <div class="msg-btn" onclick="this.classList.toggle('open')">
+            💌 My Only Choice
+            <div class="msg-hidden">You are my only choice, yenemist. I choose you every single day, forever. 💞</div>
         </div>
-        <div class="choice-card" onclick="this.classList.toggle('open')">
-            💖 My Promise
-            <div class="hidden-message">I’ll love you more every day.</div>
+        <div class="msg-btn" onclick="this.classList.toggle('open')">
+            💝 My Promise
+            <div class="msg-hidden">We will marry one day, yenesist, and we will live together until we die. I promise. 💍</div>
         </div>
-        <div class="choice-card" onclick="this.classList.toggle('open')">
-            🌟 Special Wish
-            <div class="hidden-message">May all your dreams come true.</div>
+        <div class="msg-btn" onclick="this.classList.toggle('open')">
+            💖 My Light
+            <div class="msg-hidden">yeneaynafar, you are my eyes, my light. Without you, I see nothing. 👀✨</div>
+        </div>
+        <div class="msg-btn" onclick="this.classList.toggle('open')">
+            ✨ Forever
+            <div class="msg-hidden">Every moment with you is a treasure. I love you more than words can say. 💫</div>
         </div>
     </div>
 
@@ -423,60 +406,49 @@
 
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1"></script>
     <script>
-        const secretWord = "0119";
-        let typedWord = "";
-        const inputField = document.getElementById('secretInput');
-        const typedDisplay = document.getElementById('typedDisplay');
+        // ============ UNLOCK ON BUTTON CLICK ============
+        const unlockBtn = document.getElementById('unlockButton');
+        const guitarMusic = document.getElementById('guitarMusic');
         const lockOverlayEl = document.getElementById('lockOverlay');
         const photoFrameEl = document.getElementById('photoFrame');
-        const lockIcon = document.getElementById('lockIcon');
         const cakeContainer = document.getElementById('cakeContainer');
-        const guitarMusic = document.getElementById('guitarMusic');
-        const btnNext = document.getElementById('btnNext');
         const messageEl = document.getElementById('typewriter');
-        const choiceNotes = document.getElementById('choiceNotes');
+        const specialMessages = document.getElementById('specialMessages');
+        const btnNext = document.getElementById('btnNext');
         let unlocked = false;
         let musicStarted = false;
 
+        // Start music when user clicks the unlock button
         function startMusic() {
             if (!musicStarted && guitarMusic) {
                 guitarMusic.play().then(() => musicStarted = true).catch(()=>{});
             }
         }
 
-        inputField.addEventListener('focus', startMusic);
-        inputField.addEventListener('click', startMusic);
-        document.body.addEventListener('click', startMusic, { once: true });
-
-        window.addEventListener('load', () => {
-            inputField.focus();
-            createBackgroundSparkles();
-            startFloatingHearts();
-            startFloatingNotes();
-        });
-
-        inputField.addEventListener('input', (e) => {
+        unlockBtn.addEventListener('click', () => {
             if (unlocked) return;
-            typedWord = e.target.value.toLowerCase();
-            typedDisplay.textContent = typedWord;
-
-            if (typedWord === secretWord) {
-                unlocked = true;
-                photoFrameEl.classList.remove('locked');
-                lockIcon.textContent = '❤️';
-                typedDisplay.textContent = '❤️❤️❤️';
-                startTypewriter();
-                setTimeout(() => lockOverlayEl.style.display = 'none', 600);
-                setTimeout(() => {
-                    cakeContainer.classList.add('show');
-                    choiceNotes.classList.add('show');
-                }, 400);
-                burstConfetti();
-                createExtraSparkles();
-                setTimeout(() => btnNext.style.display = 'inline-block', 1200);
-            }
+            startMusic();
+            unlocked = true;
+            photoFrameEl.classList.remove('locked');
+            // Change lock icon inside overlay (optional, overlay will hide)
+            lockOverlayEl.querySelector('.lock-icon').textContent = '❤️';
+            // Start typewriter
+            startTypewriter();
+            // Hide overlay after a moment
+            setTimeout(() => lockOverlayEl.style.display = 'none', 600);
+            // Show cake and special message buttons
+            setTimeout(() => {
+                cakeContainer.classList.add('show');
+                specialMessages.classList.add('show');
+            }, 400);
+            // Confetti burst
+            burstConfetti();
+            createExtraSparkles();
+            // Show "Continue" button
+            setTimeout(() => btnNext.style.display = 'inline-block', 1200);
         });
 
+        // ============ TYPEWRITER ============
         const messageText = "Happy Birthday, My Love! ❤️";
         let i = 0;
         function startTypewriter() {
@@ -492,25 +464,26 @@
             type();
         }
 
-        // Blow out or relight the candle by clicking the cake
+        // ============ CAKE CANDLE TOGGLE ============
         function toggleFlame() {
             if (!unlocked) return;
             const flame = document.getElementById('flame');
             flame.classList.toggle('blown');
             if (flame.classList.contains('blown')) {
-                // extra mini confetti
                 confetti({ particleCount: 30, spread: 30, origin: { y: 0.5 } });
             } else {
                 confetti({ particleCount: 20, spread: 20, origin: { y: 0.5 } });
             }
         }
 
+        // ============ CONFETTI ============
         function burstConfetti() {
             confetti({ particleCount: 150, spread: 80, origin: { y: 0.6 } });
             setTimeout(() => confetti({ particleCount: 80, angle: 60, spread: 55, origin: { x: 0 } }), 200);
             setTimeout(() => confetti({ particleCount: 80, angle: 120, spread: 55, origin: { x: 1 } }), 400);
         }
 
+        // ============ FLOATING HEARTS ============
         function startFloatingHearts() {
             setInterval(() => {
                 const heart = document.createElement('div');
@@ -524,6 +497,7 @@
             }, 400);
         }
 
+        // ============ FLOATING NOTES ============
         function startFloatingNotes() {
             const wishes = [
                 '🎵 Happy Birthday yenekonjye mist!',
@@ -546,9 +520,10 @@
             }, 2500);
         }
 
+        // ============ SPARKLES ============
         function createBackgroundSparkles() {
             const container = document.getElementById('sparklesContainer');
-            for (let i=0; i<25; i++) {
+            for (let j=0; j<25; j++) {
                 const s = document.createElement('div');
                 s.className = 'sparkle';
                 s.innerHTML = '✨';
@@ -561,7 +536,7 @@
 
         function createExtraSparkles() {
             const container = document.getElementById('sparklesContainer');
-            for (let i=0; i<15; i++) {
+            for (let j=0; j<15; j++) {
                 const s = document.createElement('div');
                 s.className = 'sparkle';
                 s.innerHTML = '✨';
@@ -573,9 +548,17 @@
             }
         }
 
+        // ============ GO TO LOVE PAGE ============
         function goToLovePage() {
             window.location.href = "love.html";
         }
+
+        // ============ INIT ============
+        window.addEventListener('load', () => {
+            createBackgroundSparkles();
+            startFloatingHearts();
+            startFloatingNotes();
+        });
     </script>
 </body>
     </html>
