@@ -587,4 +587,41 @@
         function createBackgroundSparkles() {
             const container = document.getElementById('sparklesContainer');
             for (let j=0; j<25; j++) {
-              
+                const s = document.createElement('div');
+                s.className = 'sparkle';
+                s.innerHTML = '✨';
+                s.style.left = Math.random()*100+'%';
+                s.style.top = Math.random()*100+'%';
+                s.style.animationDuration = Math.random()*4+3+'s';
+                container.appendChild(s);
+            }
+        }
+
+        function createExtraSparkles() {
+            const container = document.getElementById('sparklesContainer');
+            for (let j=0; j<15; j++) {
+                const s = document.createElement('div');
+                s.className = 'sparkle';
+                s.innerHTML = '✨';
+                s.style.left = Math.random()*100+'%';
+                s.style.top = Math.random()*100+'%';
+                s.style.animationDuration = Math.random()*2+2+'s';
+                container.appendChild(s);
+                setTimeout(() => s.remove(), 3000);
+            }
+        }
+
+        // ============ GO TO LOVE PAGE ============
+        function goToLovePage() {
+            window.location.href = "love.html";
+        }
+
+        // ============ INIT ============
+        window.addEventListener('load', () => {
+            createBackgroundSparkles();
+            startFloatingHearts();
+            startFloatingNotes();
+        });
+    </script>
+</body>
+</html>
