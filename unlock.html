@@ -100,7 +100,7 @@
 
         .lock-icon {
             font-size: 55px;
-            margin-bottom: 5px;
+            margin-bottom: 10px;
             animation: pulse 2s infinite;
             filter: none;
             z-index: 6;
@@ -142,30 +142,6 @@
             background: linear-gradient(135deg, #ff69b4, #ff1493);
             animation: none;
             box-shadow: 0 0 55px #ff69b4;
-        }
-
-        /* Recommendation text */
-        .click-hint {
-            color: white;
-            font-size: 1.2rem;
-            font-weight: bold;
-            text-shadow: 0 0 10px #ff1493;
-            filter: none;
-            z-index: 6;
-            margin-bottom: 5px;
-            letter-spacing: 1px;
-        }
-
-        .arrow-emoji {
-            font-size: 2rem;
-            filter: none;
-            z-index: 6;
-            animation: bounceArrow 1.5s infinite;
-        }
-
-        @keyframes bounceArrow {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(10px); }
         }
 
         .unlock-hint {
@@ -297,6 +273,24 @@
             display: none;
         }
 
+        /* Scroll indicator for Continue button */
+        .scroll-indicator {
+            display: none;
+            text-align: center;
+            font-size: 2.5rem;
+            margin-top: 10px;
+            z-index: 3;
+            animation: bounceDown 1.5s infinite;
+        }
+        .scroll-indicator.show {
+            display: block;
+        }
+
+        @keyframes bounceDown {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(10px); }
+        }
+
         .hearts-container, .notes-container {
             position: fixed;
             top: 0; left: 0;
@@ -383,21 +377,6 @@
         .msg-btn.open .msg-hidden {
             display: block;
         }
-
-        /* Extra floating emojis around lock */
-        .extra-emoji {
-            position: absolute;
-            font-size: 28px;
-            opacity: 0.8;
-            pointer-events: none;
-            animation: floatAround 6s infinite alternate;
-            z-index: 4;
-        }
-
-        @keyframes floatAround {
-            0% { transform: translate(0, 0) rotate(0deg); }
-            100% { transform: translate(15px, -20px) rotate(15deg); }
-        }
     </style>
 </head>
 <body>
@@ -411,18 +390,10 @@
     <div class="photo-frame locked" id="photoFrame">
         <img src="love.jpg" alt="Birthday Girl" id="profilePic">
         <div class="lock-overlay" id="lockOverlay">
-            <!-- Extra emojis around the lock -->
-            <span class="extra-emoji" style="top: 15px; left: 20px;">💖</span>
-            <span class="extra-emoji" style="top: 15px; right: 20px;">💘</span>
-            <span class="extra-emoji" style="bottom: 15px; left: 20px;">💝</span>
-            <span class="extra-emoji" style="bottom: 15px; right: 20px;">💕</span>
             <div class="lock-icon">🔒</div>
-            <!-- Recommendation to click -->
-            <div class="click-hint">👇 Click Here 👇</div>
-            <div class="arrow-emoji">⬇️</div>
-            <!-- The unlock button -->
-            <button class="unlock-btn" id="unlockButton">🎂 Happy Birthday 🎂</button>
-            <p class="unlock-hint">Tap the button to reveal your surprise 💖</p>
+            <!-- The unlock button – now says "Click Here Yenefkr" -->
+            <button class="unlock-btn" id="unlockButton">💖 Click Here Yenefkr 💖</button>
+            <p class="unlock-hint">Tap the button to reveal your surprise</p>
         </div>
     </div>
 
@@ -458,7 +429,10 @@
         </div>
     </div>
 
-    <!-- Continue button appears AFTER the messages (at the very bottom) -->
+    <!-- Bouncing arrow to guide to Continue button -->
+    <div class="scroll-indicator" id="scrollIndicator">⬇️</div>
+
+    <!-- Continue button (appears after messages) -->
     <button class="btn-next" id="btnNext" onclick="goToLovePage()">💌 Continue to Your Surprise 💌</button>
 
     <div class="hearts-container" id="heartsContainer"></div>
@@ -475,6 +449,7 @@
         const messageEl = document.getElementById('typewriter');
         const specialMessages = document.getElementById('specialMessages');
         const btnNext = document.getElementById('btnNext');
+        const scrollIndicator = document.getElementById('scrollIndicator');
         let unlocked = false;
         let musicStarted = false;
 
@@ -504,11 +479,11 @@
             // Confetti burst
             burstConfetti();
             createExtraSparkles();
-            // Show "Continue" button AFTER messages (longer delay, or after interactions)
-            // We'll show it after all messages are shown (setTimeout 2000ms, or could wait for click)
+            // Show Continue button + scroll indicator after a short delay
             setTimeout(() => {
-                if (btnNext) btnNext.style.display = 'inline-block';
-            }, 2000); // Gives her time to read the 4 buttons before the continue appears
+                btnNext.style.display = 'inline-block';
+                scrollIndicator.classList.add('show');
+            }, 2000);
         });
 
         // ============ TYPEWRITER ============
