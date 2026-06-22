@@ -391,8 +391,8 @@
         <img src="love.jpg" alt="Birthday Girl" id="profilePic">
         <div class="lock-overlay" id="lockOverlay">
             <div class="lock-icon">🔒</div>
-            <!-- The unlock button – now says "Click Here Yenefkr" -->
-            <button class="unlock-btn" id="unlockButton">💖 Click Here Yenefkr 💖</button>
+            <!-- The unlock button – now says "Click Here Fikre" -->
+            <button class="unlock-btn" id="unlockButton">💖 Click Here Fikre 💖</button>
             <p class="unlock-hint">Tap the button to reveal your surprise</p>
         </div>
     </div>
@@ -453,7 +453,6 @@
         let unlocked = false;
         let musicStarted = false;
 
-        // Start music when user clicks the unlock button
         function startMusic() {
             if (!musicStarted && guitarMusic) {
                 guitarMusic.play().then(() => musicStarted = true).catch(()=>{});
@@ -465,28 +464,21 @@
             startMusic();
             unlocked = true;
             photoFrameEl.classList.remove('locked');
-            // Change lock icon inside overlay
             lockOverlayEl.querySelector('.lock-icon').textContent = '❤️';
-            // Start typewriter
             startTypewriter();
-            // Hide overlay after a moment
             setTimeout(() => lockOverlayEl.style.display = 'none', 600);
-            // Show cake and special message buttons
             setTimeout(() => {
                 cakeContainer.classList.add('show');
                 specialMessages.classList.add('show');
             }, 400);
-            // Confetti burst
             burstConfetti();
             createExtraSparkles();
-            // Show Continue button + scroll indicator after a short delay
             setTimeout(() => {
                 btnNext.style.display = 'inline-block';
                 scrollIndicator.classList.add('show');
             }, 2000);
         });
 
-        // ============ TYPEWRITER ============
         const messageText = "Happy Birthday, My Love! ❤️";
         let i = 0;
         function startTypewriter() {
@@ -502,7 +494,6 @@
             type();
         }
 
-        // ============ CAKE CANDLE TOGGLE ============
         function toggleFlame() {
             if (!unlocked) return;
             const flame = document.getElementById('flame');
@@ -514,14 +505,12 @@
             }
         }
 
-        // ============ CONFETTI ============
         function burstConfetti() {
             confetti({ particleCount: 150, spread: 80, origin: { y: 0.6 } });
             setTimeout(() => confetti({ particleCount: 80, angle: 60, spread: 55, origin: { x: 0 } }), 200);
             setTimeout(() => confetti({ particleCount: 80, angle: 120, spread: 55, origin: { x: 1 } }), 400);
         }
 
-        // ============ FLOATING HEARTS ============
         function startFloatingHearts() {
             setInterval(() => {
                 const heart = document.createElement('div');
@@ -535,7 +524,6 @@
             }, 400);
         }
 
-        // ============ FLOATING NOTES ============
         function startFloatingNotes() {
             const wishes = [
                 '🎵 Happy Birthday yenekonjye mist!',
@@ -558,7 +546,6 @@
             }, 2500);
         }
 
-        // ============ SPARKLES ============
         function createBackgroundSparkles() {
             const container = document.getElementById('sparklesContainer');
             for (let j=0; j<25; j++) {
@@ -586,12 +573,10 @@
             }
         }
 
-        // ============ GO TO LOVE PAGE ============
         function goToLovePage() {
             window.location.href = "love.html";
         }
 
-        // ============ INIT ============
         window.addEventListener('load', () => {
             createBackgroundSparkles();
             startFloatingHearts();
