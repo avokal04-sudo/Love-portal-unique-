@@ -7,14 +7,15 @@
     <style>
         body {
             margin: 0;
-            min-height: 100vh;
+            min-height: 150vh;  /* makes room for scrolling */
             background: linear-gradient(-45deg, #ff9a9e, #fad0c4, #fbc2eb, #ffb6c1);
             background-size: 400% 400%;
             animation: gradientMove 12s ease infinite;
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: center;
+            justify-content: flex-start;
+            padding-top: 10vh;
             font-family: 'Segoe UI', cursive;
             overflow-x: hidden;
             position: relative;
@@ -56,6 +57,7 @@
             box-shadow: 0 0 40px rgba(255,105,180,0.8);
             z-index: 2;
             transition: box-shadow 0.5s;
+            margin-bottom: 20px;
         }
 
         .photo-frame.locked img {
@@ -111,7 +113,7 @@
             50% { transform: scale(1.2); }
         }
 
-        /* Unlock button inside overlay */
+        /* Unlock button – now "Click Her" */
         .unlock-btn {
             background: linear-gradient(135deg, #ff1493, #ff69b4);
             color: white;
@@ -171,6 +173,7 @@
             transition: all 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             z-index: 3;
             cursor: pointer;
+            margin-bottom: 30px;
         }
 
         .cake-container.show {
@@ -249,7 +252,7 @@
             visibility: visible;
         }
 
-        .btn-surprise, .btn-next {
+        .btn-surprise {
             margin-top: 15px;
             padding: 12px 30px;
             font-size: 1.2rem;
@@ -262,28 +265,86 @@
             transition: all 0.3s;
             z-index: 3;
             font-weight: bold;
+            margin-bottom: 40vh;  /* pushes messages far down so they are off-screen initially */
         }
-        .btn-surprise:hover, .btn-next:hover {
+        .btn-surprise:hover {
             background: deeppink;
             color: white;
             transform: scale(1.05);
         }
 
-        .btn-next {
+        /* Special message buttons (far below) */
+        .special-messages {
             display: none;
+            z-index: 3;
+            gap: 15px;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-bottom: 30px;
+        }
+        .special-messages.show {
+            display: flex;
         }
 
-        /* Scroll indicator for Continue button */
-        .scroll-indicator {
-            display: none;
+        .msg-btn {
+            background: rgba(255,255,255,0.3);
+            backdrop-filter: blur(12px);
+            border-radius: 25px;
+            padding: 12px 18px;
+            color: white;
+            border: 1px solid rgba(255,255,255,0.5);
+            font-size: 1.3rem;
+            cursor: pointer;
+            transition: 0.3s;
+            font-weight: bold;
+            min-width: 80px;
             text-align: center;
-            font-size: 2.5rem;
-            margin-top: 10px;
-            z-index: 3;
-            animation: bounceDown 1.5s infinite;
         }
-        .scroll-indicator.show {
+        .msg-btn:hover {
+            background: rgba(255,255,255,0.6);
+            color: #d63384;
+            transform: translateY(-5px);
+        }
+
+        .msg-hidden {
+            display: none;
+            font-size: 0.9rem;
+            margin-top: 8px;
+            color: #ffe4ec;
+            background: rgba(0,0,0,0.2);
+            border-radius: 15px;
+            padding: 8px 15px;
+            max-width: 250px;
+            text-align: center;
+        }
+        .msg-btn.open .msg-hidden {
             display: block;
+        }
+
+        /* "clik here fkre" arrow button (still takes her to love.html) */
+        .arrow-btn {
+            display: none;
+            margin-top: 20px;
+            padding: 14px 30px;
+            font-size: 1.5rem;
+            font-weight: bold;
+            background: linear-gradient(135deg, #ff69b4, #ff1493);
+            color: white;
+            border: 2px solid white;
+            border-radius: 50px;
+            cursor: pointer;
+            box-shadow: 0 0 25px deeppink;
+            animation: bounceDown 1.5s infinite;
+            z-index: 3;
+            transition: transform 0.3s;
+            margin-bottom: 40px;
+        }
+        .arrow-btn.show {
+            display: inline-block;
+        }
+        .arrow-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 45px #ff69b4;
         }
 
         @keyframes bounceDown {
@@ -329,60 +390,12 @@
             0% { transform: translateY(0) rotate(0deg); opacity: 1; }
             100% { transform: translateY(-110vh) rotate(15deg); opacity: 0; }
         }
-
-        /* Special message buttons after unlock */
-        .special-messages {
-            display: none;
-            z-index: 3;
-            margin-top: 20px;
-            gap: 15px;
-            flex-wrap: wrap;
-            justify-content: center;
-        }
-        .special-messages.show {
-            display: flex;
-        }
-
-        .msg-btn {
-            background: rgba(255,255,255,0.3);
-            backdrop-filter: blur(12px);
-            border-radius: 25px;
-            padding: 12px 18px;
-            color: white;
-            border: 1px solid rgba(255,255,255,0.5);
-            font-size: 1.3rem;
-            cursor: pointer;
-            transition: 0.3s;
-            font-weight: bold;
-            min-width: 80px;
-            text-align: center;
-        }
-        .msg-btn:hover {
-            background: rgba(255,255,255,0.6);
-            color: #d63384;
-            transform: translateY(-5px);
-        }
-
-        .msg-hidden {
-            display: none;
-            font-size: 0.9rem;
-            margin-top: 8px;
-            color: #ffe4ec;
-            background: rgba(0,0,0,0.2);
-            border-radius: 15px;
-            padding: 8px 15px;
-            max-width: 250px;
-            text-align: center;
-        }
-        .msg-btn.open .msg-hidden {
-            display: block;
-        }
     </style>
 </head>
 <body>
     <div class="sparkles-container" id="sparklesContainer"></div>
 
-    <!-- Guitar music – plays on unlock click -->
+    <!-- Guitar music – starts as soon as she clicks the unlock button -->
     <audio id="guitarMusic" loop>
         <source src="Birthday - Happy Birthday Classical Guitar V.mp3" type="audio/mpeg">
     </audio>
@@ -391,8 +404,8 @@
         <img src="love.jpg" alt="Birthday Girl" id="profilePic">
         <div class="lock-overlay" id="lockOverlay">
             <div class="lock-icon">🔒</div>
-            <!-- The unlock button – now says "Click Here Fikre" -->
-            <button class="unlock-btn" id="unlockButton">💖 Click Here Fikre 💖</button>
+            <!-- Unlock button: "Click Her" -->
+            <button class="unlock-btn" id="unlockButton">💖 Click Her 💖</button>
             <p class="unlock-hint">Tap the button to reveal your surprise</p>
         </div>
     </div>
@@ -409,7 +422,7 @@
     <div class="message" id="typewriter"></div>
     <button class="btn-surprise" onclick="burstConfetti()">🎂 Happy Birthday 🎂</button>
 
-    <!-- Interactive message buttons (visible after unlock) -->
+    <!-- Interactive message buttons (visible after unlock, far below) -->
     <div class="special-messages" id="specialMessages">
         <div class="msg-btn" onclick="this.classList.toggle('open')">
             💌 My Only Choice
@@ -429,11 +442,8 @@
         </div>
     </div>
 
-    <!-- Bouncing arrow to guide to Continue button -->
-    <div class="scroll-indicator" id="scrollIndicator">⬇️</div>
-
-    <!-- Continue button (appears after messages) -->
-    <button class="btn-next" id="btnNext" onclick="goToLovePage()">💌 Continue to Your Surprise 💌</button>
+    <!-- "clik here fkre" button (still there, takes her to love.html) -->
+    <button class="arrow-btn" id="arrowBtn" onclick="goToLovePage()">⬇️ clik here fkre ⬇️</button>
 
     <div class="hearts-container" id="heartsContainer"></div>
     <div class="notes-container" id="notesContainer"></div>
@@ -448,11 +458,11 @@
         const cakeContainer = document.getElementById('cakeContainer');
         const messageEl = document.getElementById('typewriter');
         const specialMessages = document.getElementById('specialMessages');
-        const btnNext = document.getElementById('btnNext');
-        const scrollIndicator = document.getElementById('scrollIndicator');
+        const arrowBtn = document.getElementById('arrowBtn');
         let unlocked = false;
         let musicStarted = false;
 
+        // Music plays as soon as she clicks (browser requires user gesture)
         function startMusic() {
             if (!musicStarted && guitarMusic) {
                 guitarMusic.play().then(() => musicStarted = true).catch(()=>{});
@@ -470,15 +480,20 @@
             setTimeout(() => {
                 cakeContainer.classList.add('show');
                 specialMessages.classList.add('show');
+                // Automatically scroll down to the messages
+                setTimeout(() => {
+                    specialMessages.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }, 300);  // wait a tiny bit for the messages to fully render
             }, 400);
             burstConfetti();
             createExtraSparkles();
+            // Show the "clik here fkre" button a little later (she'll see it after scrolling)
             setTimeout(() => {
-                btnNext.style.display = 'inline-block';
-                scrollIndicator.classList.add('show');
-            }, 2000);
+                arrowBtn.classList.add('show');
+            }, 2500);
         });
 
+        // ============ TYPEWRITER ============
         const messageText = "Happy Birthday, My Love! ❤️";
         let i = 0;
         function startTypewriter() {
@@ -494,6 +509,7 @@
             type();
         }
 
+        // ============ CAKE CANDLE TOGGLE ============
         function toggleFlame() {
             if (!unlocked) return;
             const flame = document.getElementById('flame');
@@ -505,12 +521,14 @@
             }
         }
 
+        // ============ CONFETTI ============
         function burstConfetti() {
             confetti({ particleCount: 150, spread: 80, origin: { y: 0.6 } });
             setTimeout(() => confetti({ particleCount: 80, angle: 60, spread: 55, origin: { x: 0 } }), 200);
             setTimeout(() => confetti({ particleCount: 80, angle: 120, spread: 55, origin: { x: 1 } }), 400);
         }
 
+        // ============ FLOATING HEARTS ============
         function startFloatingHearts() {
             setInterval(() => {
                 const heart = document.createElement('div');
@@ -524,6 +542,7 @@
             }, 400);
         }
 
+        // ============ FLOATING NOTES ============
         function startFloatingNotes() {
             const wishes = [
                 '🎵 Happy Birthday yenekonjye mist!',
@@ -546,6 +565,7 @@
             }, 2500);
         }
 
+        // ============ SPARKLES ============
         function createBackgroundSparkles() {
             const container = document.getElementById('sparklesContainer');
             for (let j=0; j<25; j++) {
@@ -562,26 +582,4 @@
         function createExtraSparkles() {
             const container = document.getElementById('sparklesContainer');
             for (let j=0; j<15; j++) {
-                const s = document.createElement('div');
-                s.className = 'sparkle';
-                s.innerHTML = '✨';
-                s.style.left = Math.random()*100+'%';
-                s.style.top = Math.random()*100+'%';
-                s.style.animationDuration = Math.random()*2+2+'s';
-                container.appendChild(s);
-                setTimeout(() => s.remove(), 3000);
-            }
-        }
-
-        function goToLovePage() {
-            window.location.href = "love.html";
-        }
-
-        window.addEventListener('load', () => {
-            createBackgroundSparkles();
-            startFloatingHearts();
-            startFloatingNotes();
-        });
-    </script>
-</body>
-</html>
+                const s = document.createElemen
