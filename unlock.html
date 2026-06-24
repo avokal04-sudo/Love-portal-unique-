@@ -7,7 +7,7 @@
     <style>
         body {
             margin: 0;
-            min-height: 150vh;  /* makes room for scrolling */
+            min-height: 150vh;
             background: linear-gradient(-45deg, #ff9a9e, #fad0c4, #fbc2eb, #ffb6c1);
             background-size: 400% 400%;
             animation: gradientMove 12s ease infinite;
@@ -82,8 +82,19 @@
             object-fit: cover;
         }
 
-        /* Lock overlay – her photo with pink tint */
+        /* Lock overlay container – still clickable, but without blur on text */
         .lock-overlay {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            border-radius: 50%;
+            cursor: pointer;
+            z-index: 5;
+            transition: opacity 0.6s;
+        }
+
+        /* Blurred photo background (separate from text) */
+        .blur-background {
             position: absolute;
             top: 0; left: 0;
             width: 100%; height: 100%;
@@ -91,21 +102,28 @@
             background-color: rgba(255,105,180,0.4);
             background-blend-mode: overlay;
             filter: blur(8px) brightness(0.7);
+            border-radius: 50%;
+            z-index: 1;
+        }
+
+        /* Text and icon container – no blur, sits above the blurred background */
+        .lock-content {
+            position: relative;
+            z-index: 2;
+            width: 100%;
+            height: 100%;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            z-index: 5;
-            border-radius: 50%;
-            transition: opacity 0.6s;
+            color: white;
+            text-shadow: 0 0 15px #ff1493;
         }
 
         .lock-icon {
             font-size: 55px;
             margin-bottom: 10px;
             animation: pulse 2s infinite;
-            filter: none;
-            z-index: 6;
         }
 
         @keyframes pulse {
@@ -113,48 +131,17 @@
             50% { transform: scale(1.2); }
         }
 
-        /* Unlock button – now "Click Her" */
-        .unlock-btn {
-            background: linear-gradient(135deg, #ff1493, #ff69b4);
-            color: white;
-            border: 2px solid white;
-            font-size: 1.3rem;
+        .lock-text {
+            font-size: 1.8rem;
             font-weight: bold;
-            padding: 12px 28px;
-            border-radius: 40px;
-            cursor: pointer;
-            margin: 10px 0;
-            letter-spacing: 1px;
-            box-shadow: 0 0 25px #ff1493;
-            transition: 0.3s;
-            z-index: 6;
-            filter: none;
-            font-family: 'Segoe UI', cursive;
-            animation: glowPulse 2s infinite;
-        }
-
-        @keyframes glowPulse {
-            0% { box-shadow: 0 0 25px #ff1493; }
-            50% { box-shadow: 0 0 45px #ff69b4; }
-            100% { box-shadow: 0 0 25px #ff1493; }
-        }
-
-        .unlock-btn:hover {
-            transform: scale(1.05);
-            background: linear-gradient(135deg, #ff69b4, #ff1493);
-            animation: none;
-            box-shadow: 0 0 55px #ff69b4;
         }
 
         .unlock-hint {
-            color: white;
             font-size: 13px;
             background: rgba(0,0,0,0.3);
             padding: 5px 15px;
             border-radius: 20px;
-            text-shadow: 1px 1px 2px black;
-            filter: none;
-            z-index: 6;
+            margin-top: 5px;
         }
 
         .photo-frame:not(.locked) .lock-overlay {
@@ -265,7 +252,7 @@
             transition: all 0.3s;
             z-index: 3;
             font-weight: bold;
-            margin-bottom: 40vh;  /* pushes messages far down so they are off-screen initially */
+            margin-bottom: 40vh;
         }
         .btn-surprise:hover {
             background: deeppink;
@@ -273,7 +260,7 @@
             transform: scale(1.05);
         }
 
-        /* Special message buttons (far below) */
+        /* Special message buttons */
         .special-messages {
             display: none;
             z-index: 3;
@@ -321,7 +308,7 @@
             display: block;
         }
 
-        /* "clik here fkre" arrow button (still takes her to love.html) */
+        /* "clik here fkre" button (white text, pink gradient) */
         .arrow-btn {
             display: none;
             margin-top: 20px;
@@ -395,7 +382,6 @@
 <body>
     <div class="sparkles-container" id="sparklesContainer"></div>
 
-    <!-- Guitar music – starts as soon as she clicks the unlock button -->
     <audio id="guitarMusic" loop>
         <source src="Birthday - Happy Birthday Classical Guitar V.mp3" type="audio/mpeg">
     </audio>
@@ -403,14 +389,17 @@
     <div class="photo-frame locked" id="photoFrame">
         <img src="love.jpg" alt="Birthday Girl" id="profilePic">
         <div class="lock-overlay" id="lockOverlay">
-            <div class="lock-icon">🔒</div>
-            <!-- Unlock button: "Click Her" -->
-            <button class="unlock-btn" id="unlockButton">💖 Click Her 💖</button>
-            <p class="unlock-hint">Tap the button to reveal your surprise</p>
+            <!-- Blurred background only -->
+            <div class="blur-background"></div>
+            <!-- Crisp text on top -->
+            <div class="lock-content">
+                <div class="lock-icon">🔒</div>
+                <div class="lock-text">💖 Click Her 💖</div>
+                <p class="unlock-hint">Tap the circle to reveal</p>
+            </div>
         </div>
     </div>
 
-    <!-- Cake -->
     <div class="cake-container" id="cakeContainer" onclick="toggleFlame()">
         <div class="candle">
             <div class="flame" id="flame"></div>
@@ -422,7 +411,6 @@
     <div class="message" id="typewriter"></div>
     <button class="btn-surprise" onclick="burstConfetti()">🎂 Happy Birthday 🎂</button>
 
-    <!-- Interactive message buttons (visible after unlock, far below) -->
     <div class="special-messages" id="specialMessages">
         <div class="msg-btn" onclick="this.classList.toggle('open')">
             💌 My Only Choice
@@ -442,7 +430,6 @@
         </div>
     </div>
 
-    <!-- "clik here fkre" button (still there, takes her to love.html) -->
     <button class="arrow-btn" id="arrowBtn" onclick="goToLovePage()">⬇️ clik here fkre ⬇️</button>
 
     <div class="hearts-container" id="heartsContainer"></div>
@@ -450,10 +437,8 @@
 
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1"></script>
     <script>
-        // ============ UNLOCK ON BUTTON CLICK ============
-        const unlockBtn = document.getElementById('unlockButton');
-        const guitarMusic = document.getElementById('guitarMusic');
         const lockOverlayEl = document.getElementById('lockOverlay');
+        const guitarMusic = document.getElementById('guitarMusic');
         const photoFrameEl = document.getElementById('photoFrame');
         const cakeContainer = document.getElementById('cakeContainer');
         const messageEl = document.getElementById('typewriter');
@@ -462,38 +447,36 @@
         let unlocked = false;
         let musicStarted = false;
 
-        // Music plays as soon as she clicks (browser requires user gesture)
         function startMusic() {
             if (!musicStarted && guitarMusic) {
                 guitarMusic.play().then(() => musicStarted = true).catch(()=>{});
             }
         }
 
-        unlockBtn.addEventListener('click', () => {
+        lockOverlayEl.addEventListener('click', () => {
             if (unlocked) return;
             startMusic();
             unlocked = true;
+
             photoFrameEl.classList.remove('locked');
-            lockOverlayEl.querySelector('.lock-icon').textContent = '❤️';
             startTypewriter();
-            setTimeout(() => lockOverlayEl.style.display = 'none', 600);
+            setTimeout(() => {
+                lockOverlayEl.style.opacity = '0';
+                lockOverlayEl.style.pointerEvents = 'none';
+            }, 600);
             setTimeout(() => {
                 cakeContainer.classList.add('show');
                 specialMessages.classList.add('show');
-                // Automatically scroll down to the messages
-                setTimeout(() => {
-                    specialMessages.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                }, 300);  // wait a tiny bit for the messages to fully render
+                // Auto-scroll to messages
+                specialMessages.scrollIntoView({ behavior: 'smooth', block: 'center' });
             }, 400);
             burstConfetti();
             createExtraSparkles();
-            // Show the "clik here fkre" button a little later (she'll see it after scrolling)
             setTimeout(() => {
                 arrowBtn.classList.add('show');
             }, 2500);
         });
 
-        // ============ TYPEWRITER ============
         const messageText = "Happy Birthday, My Love! ❤️";
         let i = 0;
         function startTypewriter() {
@@ -509,7 +492,6 @@
             type();
         }
 
-        // ============ CAKE CANDLE TOGGLE ============
         function toggleFlame() {
             if (!unlocked) return;
             const flame = document.getElementById('flame');
@@ -521,14 +503,12 @@
             }
         }
 
-        // ============ CONFETTI ============
         function burstConfetti() {
             confetti({ particleCount: 150, spread: 80, origin: { y: 0.6 } });
             setTimeout(() => confetti({ particleCount: 80, angle: 60, spread: 55, origin: { x: 0 } }), 200);
             setTimeout(() => confetti({ particleCount: 80, angle: 120, spread: 55, origin: { x: 1 } }), 400);
         }
 
-        // ============ FLOATING HEARTS ============
         function startFloatingHearts() {
             setInterval(() => {
                 const heart = document.createElement('div');
@@ -542,7 +522,6 @@
             }, 400);
         }
 
-        // ============ FLOATING NOTES ============
         function startFloatingNotes() {
             const wishes = [
                 '🎵 Happy Birthday yenekonjye mist!',
@@ -565,7 +544,6 @@
             }, 2500);
         }
 
-        // ============ SPARKLES ============
         function createBackgroundSparkles() {
             const container = document.getElementById('sparklesContainer');
             for (let j=0; j<25; j++) {
@@ -582,4 +560,26 @@
         function createExtraSparkles() {
             const container = document.getElementById('sparklesContainer');
             for (let j=0; j<15; j++) {
-                const s = document.createElemen
+                const s = document.createElement('div');
+                s.className = 'sparkle';
+                s.innerHTML = '✨';
+                s.style.left = Math.random()*100+'%';
+                s.style.top = Math.random()*100+'%';
+                s.style.animationDuration = Math.random()*2+2+'s';
+                container.appendChild(s);
+                setTimeout(() => s.remove(), 3000);
+            }
+        }
+
+        function goToLovePage() {
+            window.location.href = "love.html";
+        }
+
+        window.addEventListener('load', () => {
+            createBackgroundSparkles();
+            startFloatingHearts();
+            startFloatingNotes();
+        });
+    </script>
+</body>
+    </html>
