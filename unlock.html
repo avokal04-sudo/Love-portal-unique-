@@ -380,7 +380,7 @@
 <body>
     <div class="sparkles-container" id="sparklesContainer"></div>
 
-    <!-- Music (plays on user tap, auto-retries if blocked) -->
+    <!-- Music now uses http.mp3 -->
     <audio id="guitarMusic" loop>
         <source src="http.mp3" type="audio/mpeg">
     </audio>
@@ -444,22 +444,22 @@
         let unlocked = false;
         let musicStarted = false;
 
-        // Tries to play music on every tap until it succeeds
+        // Try to play music on every tap until it succeeds
         function tryPlayMusic() {
             if (musicStarted) return;
             if (guitarMusic) {
                 guitarMusic.play().then(() => {
                     musicStarted = true;
                 }).catch(() => {
-                    // If blocked or missing file, do nothing – will retry next tap
+                    // If blocked or missing file, will retry next tap
                 });
             }
         }
 
-        // First tap on the circle unlocks AND tries to start music
+        // Tap the circle unlocks and tries to start music
         lockOverlayEl.addEventListener('click', () => {
             if (unlocked) return;
-            tryPlayMusic();   // attempts to play each time
+            tryPlayMusic();
 
             unlocked = true;
             photoFrameEl.classList.remove('locked');
@@ -471,7 +471,10 @@
             setTimeout(() => {
                 cakeContainer.classList.add('show');
                 specialMessages.classList.add('show');
-                specialMessages.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                // Auto-scroll down to messages after 2 seconds (2000ms)
+                setTimeout(() => {
+                    specialMessages.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }, 2000);  // slow scroll down
             }, 400);
             burstConfetti();
             createExtraSparkles();
@@ -480,7 +483,7 @@
             }, 2500);
         });
 
-        // Also allow a tap anywhere on the whole page to trigger music (fallback)
+        // Fallback: tap anywhere on the page to try playing music
         document.body.addEventListener('click', tryPlayMusic);
 
         const messageText = "Happy Birthday, My Love! ❤️";
