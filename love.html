@@ -105,6 +105,7 @@
             text-align: center;
         }
 
+        /* Love letters */
         .love-letters {
             display: flex;
             flex-wrap: wrap;
@@ -154,6 +155,7 @@
             display: block;
         }
 
+        /* Phrase cards (no title above them) */
         .phrase-card {
             background: rgba(255,255,255,0.05);
             backdrop-filter: blur(12px);
@@ -213,7 +215,88 @@
             100% { transform: translateY(-8px); }
         }
 
-        /* Mobile friendly */
+        /* Big Amharic Birthday Love Letter */
+        .amharic-love-letter {
+            background: rgba(255,255,255,0.1);
+            backdrop-filter: blur(15px);
+            border-radius: 40px;
+            padding: 30px 25px;
+            margin: 30px 0 20px;
+            border: 2px solid white;
+            box-shadow: 0 0 40px deeppink;
+            color: white;
+            font-family: 'Georgia', serif;
+            line-height: 2.2;
+            font-size: 1.2rem;
+            text-align: center;
+            width: 100%;
+            max-width: 700px;
+            animation: fadeInUp 1s ease;
+        }
+
+        .house-photo {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid white;
+            margin: 15px auto;
+            display: block;
+            box-shadow: 0 0 20px #ff69b4;
+        }
+
+        .love-emoji {
+            font-size: 2rem;
+            margin: 10px 0;
+        }
+
+        /* Balloon Game Section */
+        .balloon-game-section {
+            width: 100%;
+            max-width: 700px;
+            margin: 30px 0;
+            text-align: center;
+        }
+
+        .balloon-game-container {
+            position: relative;
+            width: 100%;
+            height: 300px;
+            background: rgba(0,0,0,0.2);
+            border-radius: 20px;
+            border: 1px solid rgba(255,255,255,0.3);
+            overflow: hidden;
+        }
+
+        .game-balloon {
+            position: absolute;
+            font-size: 40px;
+            cursor: pointer;
+            animation: floatBalloon linear forwards;
+            user-select: none;
+        }
+
+        @keyframes floatBalloon {
+            0% {
+                bottom: -60px;
+                transform: translateX(0);
+                opacity: 1;
+            }
+            100% {
+                bottom: 110%;
+                transform: translateX(20px);
+                opacity: 0.5;
+            }
+        }
+
+        .final-message {
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-top: 20px;
+            text-shadow: 0 0 10px #ff1493;
+            text-align: center;
+        }
+
         @media (max-width: 600px) {
             .phrase-card {
                 flex-direction: column;
@@ -221,6 +304,10 @@
             }
             .phrase-text {
                 font-size: 1.5rem;
+            }
+            .amharic-love-letter {
+                padding: 20px 15px;
+                font-size: 1rem;
             }
         }
     </style>
@@ -234,7 +321,6 @@
         <button class="play-pause-btn" id="playPauseBtn">⏯️</button>
     </div>
 
-    <!-- Henok Abebe music -->
     <audio id="loveMusic" loop>
         <source src="Henok Abebe - Leyu Ken.mp3" type="audio/mpeg">
     </audio>
@@ -260,60 +346,81 @@
             </div>
         </div>
 
-        <div class="section-title">🌟 የተለያዩ ፍቅራዊ ቃላት (Special Words)</div>
-
+        <!-- Phrase cards (no title) -->
         <div class="phrase-card">
             <img class="phrase-photo" src="love.jpg" alt="Her">
             <span class="phrase-text">ማሬ (Mare)</span>
             <span class="phrase-emoji floating-emoji">💛</span>
         </div>
-
         <div class="phrase-card">
             <img class="phrase-photo" src="love.jpg" alt="Her">
             <span class="phrase-text">ፍቅሬ (Fikre)</span>
             <span class="phrase-emoji floating-emoji">💜</span>
         </div>
-
         <div class="phrase-card">
             <img class="phrase-photo" src="love.jpg" alt="Her">
             <span class="phrase-text">እወድሻለሁ (Ewedshalehu)</span>
             <span class="phrase-emoji floating-emoji">💙</span>
         </div>
-
         <div class="phrase-card">
             <img class="phrase-photo" src="love.jpg" alt="Her">
             <span class="phrase-text">አፈቅርሻለሁ (Afekrshalehu)</span>
             <span class="phrase-emoji floating-emoji">💚</span>
         </div>
-
         <div class="phrase-card">
             <img class="phrase-photo" src="love.jpg" alt="Her">
             <span class="phrase-text">የኔምስት (Yenemist)</span>
             <span class="phrase-emoji floating-emoji">🧡</span>
         </div>
-
         <div class="phrase-card">
             <img class="phrase-photo" src="love.jpg" alt="Her">
             <span class="phrase-text">የኔ መልአክ (Yenemelak)</span>
             <span class="phrase-emoji floating-emoji">👼</span>
         </div>
-
         <div class="phrase-card">
             <img class="phrase-photo" src="love.jpg" alt="Her">
             <span class="phrase-text">ቃንቺ በፊት ያደረግኝ (Kanchi befit yadrgegn)</span>
             <span class="phrase-emoji floating-emoji">💗</span>
         </div>
-
         <div class="phrase-card">
             <img class="phrase-photo" src="love.jpg" alt="Her">
             <span class="phrase-text">ክፉሽን አልይ (Kfushn aly)</span>
             <span class="phrase-emoji floating-emoji">💞</span>
         </div>
 
-        <div style="height: 100px;"></div>
+        <!-- 💒 Birthday Love Letter -->
+        <div class="amharic-love-letter">
+            <img src="bet.png" alt="Our Future Home" class="house-photo">
+            <div class="love-emoji">🎂💖🎂</div>
+            <p><strong>የኔ ፍቅር ፣ የኔ ብርሃን</strong></p>
+            <p>ዛሬ የአንቺ የተወለድሽበት ቀን ነው – እግዚአብሔር አንቺን ለዓለም የሰጠበት የተባረከ እለት።</p>
+            <p>ይህች ቀን ለኔ ከሁሉ የምትበልጥ ስጦታ ናት።</p>
+            <p>አንቺን በዛሬው እለት በማቴ እግዚአብሔርን አመሰግናለሁ።</p>
+            <p>አንቺ የኔ ሕይወት ነሽ ።</p>
+            <p>ዛሬ ልደትሽን ስናከብር ፣ ከአንቺ ጋር ስለሚኖረኝ የወደፊት ሕይወት ላውራልሽ።</p>
+            <p>አንድ ቀን ተጋብተን ፣ ልጆችን ወልደን ፣ አብረን እናሳድጋቸዋለን ።</p>
+            <p>አብረን እንስቃለን ፣ አብረን እናለቅሳለን ፣ እስከ እርጅና ድረስ አብረን እንጓዛለን።</p>
+            <p>አንቺ ከሌለሽ ዓለም ባዶ ነው ፤ አንቺ ግን እዚህ ስላለሽ ፣ ዓለሜ ሞልቷል።</p>
+            <p><strong>እወድሻለሁ ፣ አፈቅርሻለሁ ፣ እወድሻለሁ ፣ አፈቅርሻለሁ ፣ እወድሻለሁ!</strong></p>
+            <p>መልካም ልደት የኔ ፍቅር! 🎂</p>
+            <div class="love-emoji">💒💖💒</div>
+        </div>
+
+        <!-- 🎈 Balloon Pop Game -->
+        <div class="balloon-game-section">
+            <h2 style="color: #ffb6c1; margin-bottom: 10px;">🎈 Pop the Balloons! 🎈</h2>
+            <p style="color: #f8e0e6; margin-bottom: 10px;">Tap each balloon to make it pop!</p>
+            <div class="balloon-game-container" id="balloonGame"></div>
+        </div>
+
+        <div class="final-message">
+            <p>💒 Our Surprise is Complete 💒</p>
+        </div>
     </div>
 
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1"></script>
     <script>
+        // Floating photos
         function createFloatingPhotos() {
             const container = document.getElementById('floatingPhotos');
             const photoSrc = 'love.jpg';
@@ -333,6 +440,7 @@
             card.classList.toggle('open');
         }
 
+        // Music player
         const loveMusic = document.getElementById('loveMusic');
         const playPauseBtn = document.getElementById('playPauseBtn');
         let isPlaying = false;
@@ -357,9 +465,9 @@
             }).catch(() => {
                 playPauseBtn.textContent = '▶️';
             });
+            startBalloonGame();
         });
 
-        // Fallback for browsers that block autoplay: start on first click
         document.body.addEventListener('click', () => {
             if (loveMusic.paused && !isPlaying) {
                 loveMusic.play();
@@ -367,6 +475,45 @@
                 playPauseBtn.textContent = '⏸️';
             }
         }, { once: true });
+
+        // Balloon pop game
+        function startBalloonGame() {
+            const gameContainer = document.getElementById('balloonGame');
+            for (let i = 0; i < 5; i++) {
+                createBalloon(gameContainer);
+            }
+            setInterval(() => {
+                createBalloon(gameContainer);
+            }, 2500);
+        }
+
+        function createBalloon(container) {
+            const emojis = ['🎈', '🎈', '🎈', '🎊', '🎉'];
+            const balloon = document.createElement('div');
+            balloon.className = 'game-balloon';
+            balloon.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+            balloon.style.left = Math.random() * 80 + 10 + '%';
+            const duration = Math.random() * 5 + 5;
+            balloon.style.animationDuration = duration + 's';
+
+            balloon.addEventListener('click', (e) => {
+                e.stopPropagation();
+                confetti({
+                    particleCount: 25,
+                    spread: 50,
+                    origin: {
+                        x: e.clientX / window.innerWidth,
+                        y: e.clientY / window.innerHeight
+                    }
+                });
+                balloon.remove();
+            });
+
+            container.appendChild(balloon);
+            setTimeout(() => {
+                if (balloon.parentNode) balloon.remove();
+            }, duration * 1000 + 200);
+        }
     </script>
 </body>
-            </html>
+    </html>
