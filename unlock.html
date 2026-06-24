@@ -82,7 +82,7 @@
             object-fit: cover;
         }
 
-        /* Lock overlay container – still clickable, but without blur on text */
+        /* Lock overlay container – still clickable */
         .lock-overlay {
             position: absolute;
             top: 0; left: 0;
@@ -93,7 +93,7 @@
             transition: opacity 0.6s;
         }
 
-        /* Blurred photo background (separate from text) */
+        /* Blurred background only */
         .blur-background {
             position: absolute;
             top: 0; left: 0;
@@ -106,7 +106,7 @@
             z-index: 1;
         }
 
-        /* Text and icon container – no blur, sits above the blurred background */
+        /* Crisp text on top */
         .lock-content {
             position: relative;
             z-index: 2;
@@ -260,7 +260,6 @@
             transform: scale(1.05);
         }
 
-        /* Special message buttons */
         .special-messages {
             display: none;
             z-index: 3;
@@ -308,7 +307,6 @@
             display: block;
         }
 
-        /* "clik here fkre" button (white text, pink gradient) */
         .arrow-btn {
             display: none;
             margin-top: 20px;
@@ -382,6 +380,7 @@
 <body>
     <div class="sparkles-container" id="sparklesContainer"></div>
 
+    <!-- Music (plays on user tap, auto-retries if blocked) -->
     <audio id="guitarMusic" loop>
         <source src="Birthday - Happy Birthday Classical Guitar V.mp3" type="audio/mpeg">
     </audio>
@@ -389,9 +388,7 @@
     <div class="photo-frame locked" id="photoFrame">
         <img src="love.jpg" alt="Birthday Girl" id="profilePic">
         <div class="lock-overlay" id="lockOverlay">
-            <!-- Blurred background only -->
             <div class="blur-background"></div>
-            <!-- Crisp text on top -->
             <div class="lock-content">
                 <div class="lock-icon">🔒</div>
                 <div class="lock-text">💖 Click Her 💖</div>
@@ -447,17 +444,24 @@
         let unlocked = false;
         let musicStarted = false;
 
-        function startMusic() {
-            if (!musicStarted && guitarMusic) {
-                guitarMusic.play().then(() => musicStarted = true).catch(()=>{});
+        // Tries to play music on every tap until it succeeds
+        function tryPlayMusic() {
+            if (musicStarted) return;
+            if (guitarMusic) {
+                guitarMusic.play().then(() => {
+                    musicStarted = true;
+                }).catch(() => {
+                    // If blocked or missing file, do nothing – will retry next tap
+                });
             }
         }
 
+        // First tap on the circle unlocks AND tries to start music
         lockOverlayEl.addEventListener('click', () => {
             if (unlocked) return;
-            startMusic();
-            unlocked = true;
+            tryPlayMusic();   // attempts to play each time
 
+            unlocked = true;
             photoFrameEl.classList.remove('locked');
             startTypewriter();
             setTimeout(() => {
@@ -467,7 +471,6 @@
             setTimeout(() => {
                 cakeContainer.classList.add('show');
                 specialMessages.classList.add('show');
-                // Auto-scroll to messages
                 specialMessages.scrollIntoView({ behavior: 'smooth', block: 'center' });
             }, 400);
             burstConfetti();
@@ -476,6 +479,9 @@
                 arrowBtn.classList.add('show');
             }, 2500);
         });
+
+        // Also allow a tap anywhere on the whole page to trigger music (fallback)
+        document.body.addEventListener('click', tryPlayMusic);
 
         const messageText = "Happy Birthday, My Love! ❤️";
         let i = 0;
